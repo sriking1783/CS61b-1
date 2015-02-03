@@ -1,6 +1,7 @@
 import list.EquationList;
 
 public class Calculator {
+    public EquationList history;
     // YOU MAY WISH TO ADD SOME FIELDS
 
     /**
@@ -12,8 +13,17 @@ public class Calculator {
      * @return the sum of x and y
      **/
     public int add(int x, int y) {
-        // YOUR CODE HERE
-        return -1;
+        // counts all the bits that need to be carried
+        int carryNums;
+        // does the calculation without accounting for the carry
+        int basicCalc;
+        while (y != 0) {
+            carryNums = x & y;
+            basicCalc = x ^ y;
+            x = basicCalc;
+            y = carryNums << 1;  // to account for the digit place values
+        }
+        return x;
     }
 
     /**
@@ -25,8 +35,18 @@ public class Calculator {
      * @return the product of x and y
      **/
     public int multiply(int x, int y) {
-        // YOUR CODE HERE
-        return -1;
+        int result = 0;
+        int holder = 0;
+        while (y != 0) {
+            // Tests if number is odd (or rather, if not divisible by two)
+            if ((y & 1) == 1) {
+                result += x;
+            }
+            x = this.add(x, x);
+            // If we add (multiply by 2), then divide multiplier by 2
+            y = y >>> 1;
+        }
+        return result;
     }
 
     /**
@@ -39,7 +59,14 @@ public class Calculator {
      * @param result is an integer corresponding to the result of the equation
      **/
     public void saveEquation(String equation, int result) {
-        // YOUR CODE HERE
+        if (history == null) {
+            history = new EquationList(equation, result, null);
+        }
+        else {
+            EquationList swamp = new EquationList(equation, result, null);
+            swamp.next = history;
+            history = swamp;
+        }
     }
 
     /**
@@ -50,7 +77,13 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printAllHistory() {
-        // YOUR CODE HERE
+        EquationList temp = history;
+        int x = 0;
+        while (temp != null) {
+            x += 1;
+            temp = temp.next;
+        }
+        this.printHistory(x);
     }
 
     /**
@@ -61,7 +94,12 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printHistory(int n) {
-        // YOUR CODE HERE
+        EquationList swamp = history;
+        while ((swamp != null) && (n != 0)) {
+            System.out.println(swamp.equation + " = " + swamp.result);
+            swamp = swamp.next;
+            n -= 1;
+        }
     }    
 
     /**
@@ -69,7 +107,8 @@ public class Calculator {
      * undoEquation() removes the most recent equation we saved to our history.
     **/
     public void undoEquation() {
-        // YOUR CODE HERE
+        EquationList temp = history.next;
+        history = temp;
     }
 
     /**
@@ -77,7 +116,7 @@ public class Calculator {
      * clearHistory() removes all entries in our history.
      **/
     public void clearHistory() {
-        // YOUR CODE HERE
+        history = null;
     }
 
     /**
@@ -87,8 +126,16 @@ public class Calculator {
      * @return the sum of all of the results in history
      **/
     public int cumulativeSum() {
-        // YOUR CODE HERE
-        return -1;
+        if (history == null) {
+            return 0;
+        }
+        int sum = 0;
+        EquationList store = history;
+        while (store != null) {
+            sum += store.result;
+            store = store.next;
+        }
+        return sum;
     }
 
     /**
@@ -98,7 +145,15 @@ public class Calculator {
      * @return the product of all of the results in history
      **/
     public int cumulativeProduct() {
-        // YOUR CODE HERE
-        return -1;
+        if (history == null) {
+            return 1;
+        }
+        int product = 1;
+        EquationList store = history;
+        while (store != null) {
+            product *= store.result;
+            store = store.next;
+        }
+        return product;
     }
 }
