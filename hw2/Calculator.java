@@ -107,8 +107,10 @@ public class Calculator {
      * undoEquation() removes the most recent equation we saved to our history.
     **/
     public void undoEquation() {
-        EquationList temp = history.next;
-        history = temp;
+        if (history != null) {
+            EquationList temp = history.next;
+            history = temp;
+        }
     }
 
     /**
