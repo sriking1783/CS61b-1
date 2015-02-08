@@ -29,6 +29,7 @@ public class TestDoubleChain {
         d.insertBack(8);
         assertEquals(1, d.getFront().val, 1e-11);
         assertEquals(8, d.getBack().val, 1e-11);
+<<<<<<< HEAD
 
         assertEquals(8, d.deleteBack().val, 1e-11);
         assertEquals(7, d.getBack().val, 1e-11);
@@ -46,6 +47,8 @@ public class TestDoubleChain {
         d.insertBack(2.1);
         d.insertBack(1.0);
         assertEquals("1.0, 2.1, 3.3, 4.6, 5.2", d.toString());
+=======
+>>>>>>> 090c93dc4065bbe7fed1839581959c1e0f32df5f
     }
 
     public static void main(String[] args) {
