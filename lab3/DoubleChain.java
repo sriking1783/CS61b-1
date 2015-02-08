@@ -14,8 +14,8 @@ public class DoubleChain {
 	/** Returns the last item in the DoubleChain. */		
 	public DNode getBack() {
 		DNode temp = head;
-		while (temp.prev != null) {
-			temp = temp.prev;
+		while (temp.next != null) {
+			temp = temp.next;
 		}
 		return temp;
 	}
@@ -23,17 +23,17 @@ public class DoubleChain {
 	/** Adds D to the front of the DoubleChain. */	
 	public void insertFront(double d) {
 		DNode temp = head;
-		temp.next = new DNode(temp, d, null);
-		head = temp.next;
+		temp.prev = new DNode(null, d, temp);
+		head = temp.prev;
 	}
 	
 	/** Adds D to the back of the DoubleChain. */	
 	public void insertBack(double d) {
 		DNode temp = head;
-		while (temp.prev != null) {
-			temp = temp.prev;
+		while (temp.next != null) {
+			temp = temp.next;
 		}
-		temp.prev = new DNode(null, d, temp);
+		temp.next = new DNode(temp, d, null);
 	}
 	
 	/** Removes the last item in the DoubleChain and returns it. 
@@ -41,9 +41,9 @@ public class DoubleChain {
 	public DNode deleteBack() {
 		if (head != null) {
 			DNode rv = this.getBack();
-			DNode temp = this.getBack().next;
+			DNode temp = this.getBack().prev;
 			if (temp != null) {
-				temp.prev = null;
+				temp.next = null;
 			}
 			head = temp;
 			return rv;
@@ -59,10 +59,10 @@ public class DoubleChain {
 	}
 
 	private String toString(DNode dChain) {
-		if (dChain.next == null) {
+		if (dChain.prev == null) {
 			return String.valueOf(dChain.val);
 		}
-		return dChain.val + ", " + this.toString(dChain.next);
+		return dChain.val + ", " + this.toString(dChain.prev);
 	}
 
 	public static class DNode {

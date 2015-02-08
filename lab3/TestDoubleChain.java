@@ -36,6 +36,12 @@ public class TestDoubleChain {
         DoubleChain x = new DoubleChain(5);
         assertEquals(5, x.deleteBack().val, 1e-11);
         assertEquals(null, x.deleteBack());
+
+        DoubleChain y = new DoubleChain(5);
+        y.insertBack(6.0);
+        assertEquals(6.0, y.getFront().next.val, 1e-6);
+        y.insertFront(4.1);
+        assertEquals(4.1, y.getBack().prev.prev.val, 1e-6);
     }
 
     @Test
