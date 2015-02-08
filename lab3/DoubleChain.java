@@ -61,15 +61,15 @@ public class DoubleChain {
 	/** Returns a string representation of the DoubleChain. 
 	  * This is an extra challenge problem. */
 	public String toString() {
-		String returnObj = "";
 		DNode temp = this.getBack();
-		while (temp.next != null)	{
-			returnObj = returnObj + temp.val + ", ";
-			temp = temp.next;
-		}
+		return this.toString(temp);
+	}
 
-		returnObj = returnObj + this.getFront().val;
-		return returnObj;
+	private String toString(DNode dChain) {
+		if (dChain.next == null) {
+			return String.valueOf(dChain.val);
+		}
+		return dChain.val + ", " + this.toString(dChain.next);
 	}
 
 	public static class DNode {
