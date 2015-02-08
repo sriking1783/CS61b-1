@@ -35,7 +35,7 @@ public class TestDoubleChain {
 
         DoubleChain x = new DoubleChain(5);
         assertEquals(5, x.deleteBack().val, 1e-11);
-        assertEquals(null, x.deleteBack());        
+        assertEquals(null, x.deleteBack());
     }
 
     @Test
