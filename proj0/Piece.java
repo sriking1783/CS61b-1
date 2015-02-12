@@ -87,7 +87,7 @@ public class Piece {
 			board.remove(x, y);
 			for (int i = x - 1; i < x + 1; i += 2) {
 				for (int j = y - 1; j < y + 1; j += 2) {
-					if (board.pieceAt(i, j) != null && !board.pieceAt(i, j).isShield()) {
+					if (board.pieceAt(i, j) != null) {
 						board.remove(i, j);
 					}
 				}
