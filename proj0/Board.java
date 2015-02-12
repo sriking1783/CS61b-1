@@ -1,7 +1,7 @@
 public class Board {
 	private static boolean beEmpty;
 	private Piece[][] board;
-	private final int SIZE = 8;
+	private int size = 8;
 	private boolean fireTurn;
 	private boolean selected;
 	private boolean moved;
@@ -15,16 +15,22 @@ public class Board {
 		Board b = new Board(false);
 		b.getBoardGUI();
 		while (b.winner() == null) {
-			if (StdDrawPlus.mousePressed()) {
-                double x = StdDrawPlus.mouseX();
-                double y = StdDrawPlus.mouseY();
-                // StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
-                if (b.canSelect((int) x, (int) y)) {
-                	// StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-                	b.select((int) x, (int) y);
-                }
-                b.updatePiecesGUI();
-            }            
+			while(StdDrawPlus.isSpacePressed()) {
+				if (StdDrawPlus.mousePressed()) {
+	                double x = StdDrawPlus.mouseX();
+	                double y = StdDrawPlus.mouseY();
+	                StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
+	                if (b.canSelect((int) x, (int) y)) {
+	                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+	                	b.select((int) x, (int) y);
+	                }
+	            }
+	            b.updatePiecesGUI();
+	            if (b.canEndTurn()) {
+	            	b.endTurn();
+	            }
+			}  
+			StdDrawPlus.show(100);      
 		}
 
 	}
@@ -34,7 +40,7 @@ public class Board {
 	  * configuration. Note that an empty Board could possibly be useful
 	  * for testing purposes. */
 	public Board(boolean shouldBeEmpty) {
-		board = new Piece[SIZE][SIZE];
+		board = new Piece[size][size];
 		beEmpty = shouldBeEmpty;
 		if (!shouldBeEmpty) {
 			this.addInitPieces();
@@ -44,10 +50,10 @@ public class Board {
 
 	/** Creates a board that represents the GUI */
 	private void getBoardGUI() {
-		StdDrawPlus.setXscale(0, SIZE);
-        StdDrawPlus.setYscale(0, SIZE);
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
+		StdDrawPlus.setXscale(0, size);
+        StdDrawPlus.setYscale(0, size);
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				if ((i + j) % 2 == 0) {
 					StdDrawPlus.setPenColor(StdDrawPlus.GRAY);
 				} else {
@@ -65,8 +71,8 @@ public class Board {
 	/** Determines where pieces should be added in the initial version
 	  * of the board and adds them to both the GUI and algorithm board */
 	private void addInitPieces() {
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				if ((j == 0) && (i % 2 == 0)) {
 					board[i][j] = new Piece(true, this, i, j, "pawn");
 				} else if ((j == 1) && (i % 2 == 1)) {
@@ -87,8 +93,8 @@ public class Board {
 	/** Adds pieces to the GUI in all the appropriate tiles where there
 	  * already exists a piece */
 	private void updatePiecesGUI() {
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				if (board[i][j] != null) {
 					String type = "";
 					if (board[i][j].isFire()) {
@@ -126,7 +132,7 @@ public class Board {
 
 	/** Tests to see if a certain (x, y) is within the bounds of the board */
 	private boolean withinBounds(int x, int y) {
-		if (x < SIZE && y < SIZE && x >= 0 && y >= 0) {
+		if (x < size && y < size && x >= 0 && y >= 0) {
 			return true;
 		}
 		return false;
@@ -168,32 +174,28 @@ public class Board {
 			if ((xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) || (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1))) {
 				return true;
 			}
-			if (board[xi][yi].isFire()) {
-				Piece rightUpPiece = board[xi + 1][yi + 1];
-				if (rightUpPiece != null && (!rightUpPiece.isFire())) {
-					if (xf == xi + 2 && yf == yi + 2) {
-						return true;
-					}
-				}
-				Piece leftUpPiece = board[xi + 1][yi - 1];
-				if (leftUpPiece != null && (!leftUpPiece.isFire())) {
-					if (xf == xi + 2 && yf == yi - 2) {
-						return true;
-					}
+			Piece rightUpPiece = board[xi + 1][yi + 1];
+			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
+				if (xf == xi + 2 && yf == yi + 2) {
+					return true;
 				}
 			}
-			else if (!board[xi][yi].isFire()) {
-				Piece rightDownPiece = board[xi - 1][yi + 1];
-				if (rightDownPiece != null && (rightDownPiece.isFire())) {
-					if (xf == xi - 2 && yf == yi + 2) {
-						return true;
-					}
+			Piece leftUpPiece = board[xi + 1][yi - 1];
+			if (leftUpPiece != null && (!leftUpPiece.isFire())) {
+				if (xf == xi + 2 && yf == yi - 2) {
+					return true;
 				}
-				Piece leftDownPiece = board[xi - 1][yi - 1];
-				if (leftDownPiece != null && (leftDownPiece.isFire())) {
-					if (xf == xi - 2 && yf == yi - 2) {
-						return true;
-					}
+			}
+			Piece rightDownPiece = board[xi - 1][yi + 1];
+			if (rightDownPiece != null && (rightDownPiece.isFire())) {
+				if (xf == xi - 2 && yf == yi + 2) {
+					return true;
+				}
+			}
+			Piece leftDownPiece = board[xi - 1][yi - 1];
+			if (leftDownPiece != null && (leftDownPiece.isFire())) {
+				if (xf == xi - 2 && yf == yi - 2) {
+					return true;
 				}
 			}
 		} else if (board[xi][yi].isFire()) {
@@ -258,22 +260,9 @@ public class Board {
 	  * test circumstances.) */
 	public void place(Piece p, int x, int y) {
 		if (withinBounds(x, y) && (p != null)) {
-			// this.findAndRemove(p);
 			board[x][y] = p;
 		}
 	}
-
-	// /** If p already exists in the current Board, it removes it from the initial
-	//   *	position. */
-	// private void findAndRemove(Piece piece) {
-	// 	for (int i = 0; i < SIZE; i++) {
-	// 		for (int j = 0; j < SIZE; j++) {
-	// 			if (piece == board[i][j]) {
-	// 				Piece p = this.remove(i, j);
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	/** Executes a remove. Returns the piece that was removed. If the input
 	  * (x, y) is out of bounds, returns null and prints an appropriate
@@ -327,8 +316,8 @@ public class Board {
 	public String winner() {
 		int fireCount = 0;
 		int waterCount = 0;
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				if (board[i][j] != null) {
 					if (board[i][j].isFire()) {
 						fireCount += 1;
