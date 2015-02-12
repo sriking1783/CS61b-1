@@ -71,6 +71,12 @@ public class Piece {
 	  * is valid. Moves the piece to (x, y), capturing any intermediate
 	  * piece if applicable. This will be a difficult method to write. */
 	public void move(int x, int y) {
+		if (this.isFire() && this.x == 7 && !this.isKing()) {
+			this.crowned = true;
+		}
+		else if (!this.isFire() && this.x == 0 && !this.isKing()) {
+			this.crowned = true;
+		}
 		board.place(this, x, y);
 		board.remove(xPos, yPos).captures = true;
 		if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
@@ -89,12 +95,6 @@ public class Piece {
 		}
 		xPos = x;
 		yPos = y;
-		if (this.isFire() && x == 7 && !this.isKing()) {
-			this.crowned = true;
-		}
-		else if (!this.isFire() && x == 0 && !this.isKing()) {
-			this.crowned = true;
-		}
 	}
 
 	private int[] midpoint(int x, int y) {
