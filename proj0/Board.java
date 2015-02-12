@@ -15,7 +15,7 @@ public class Board {
 		Board b = new Board(false);
 		b.getBoardGUI();
 		while (b.winner() == null) {
-			while(StdDrawPlus.isSpacePressed()) {
+			while(!StdDrawPlus.isSpacePressed()) {
 				if (StdDrawPlus.mousePressed()) {
 	                double x = StdDrawPlus.mouseX();
 	                double y = StdDrawPlus.mouseY();
