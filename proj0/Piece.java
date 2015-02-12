@@ -89,10 +89,10 @@ public class Piece {
 		}
 		xPos = x;
 		yPos = y;
-		if (this.isFire() && this.xPos == 7 && !this.isKing()) {
+		if (this.isFire() && this.xPos == 7) {
 			this.crowned = true;
 		}
-		else if (!this.isFire() && this.xPos == 0 && !this.isKing()) {
+		else if (!this.isFire() && this.xPos == 0) {
 			this.crowned = true;
 		}
 	}
