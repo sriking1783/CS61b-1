@@ -5,7 +5,7 @@ public class Piece {
 	private int xPos;
 	private int yPos;
 	private String pieceType;
-	private boolean beenCaptured;
+	private boolean captures;
 	
 	/** Constructor for a piece. isFire determines whether the piece is a
 	  * fire or water piece. b represents the Board that the piece is on
@@ -21,7 +21,7 @@ public class Piece {
 		yPos = y;
 		pieceType = type;
 		crowned = false;
-		beenCaptured = false;
+		captures = false;
 	}
 
 	/** Returns whether or not the piece is a fire piece. */
@@ -72,10 +72,10 @@ public class Piece {
 	  * piece if applicable. This will be a difficult method to write. */
 	public void move(int x, int y) {
 		board.place(this, x, y);
-		board.remove(xPos, yPos);
+		board.remove(xPos, yPos).captures = true;
 		if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
 			int[] middlePoint = midpoint(x, y);
-			board.remove(middlePoint[0], middlePoint[1]).beenCaptured = true;
+			board.remove(middlePoint[0], middlePoint[1]);
 		}
 		if (this.isBomb()) {
 			board.remove(x, y);
@@ -89,10 +89,10 @@ public class Piece {
 		}
 		xPos = x;
 		yPos = y;
-		if (this.isFire() && this.xPos == 7) {
+		if (this.isFire() && this.xPos == 7 && !this.isKing()) {
 			this.crowned = true;
 		}
-		else if (!this.isFire() && this.xPos == 0) {
+		else if (!this.isFire() && this.xPos == 0 && !this.isKing()) {
 			this.crowned = true;
 		}
 	}
@@ -106,7 +106,7 @@ public class Piece {
 	/** Returns whether or not this Piece has captured another piece this
 	  * turn. */
 	public boolean hasCaptured() {
-		if (beenCaptured) {
+		if (captures) {
 			return true;
 		}
 		return false;
@@ -115,6 +115,6 @@ public class Piece {
 	/** Called at the end of each turn on the Piece that moved. Makes sure
 	  * the piece's hasCaptured() value return to false. */
 	public void doneCapturing() {
-		beenCaptured = false;
+		captures = false;
 	}
 }
