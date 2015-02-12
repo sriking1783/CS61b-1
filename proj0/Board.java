@@ -9,7 +9,6 @@ public class Board {
 	private Piece selectedPiece;
 	private int selectedX;
 	private int selectedY;
-	private int direction;
 
 	/** Starts a GUI supported version of the game. */
 	public static void main (String[] args) {
@@ -162,49 +161,70 @@ public class Board {
 	  * turn it is or if a move has already been made, but rather can. 
 	  * (Note: method is NOT required and will not be tested.) */
 	private boolean validMove(int xi, int yi, int xf, int yf) {
-		if (board[xf][yf] != null) {
+		if (board[xf][yf] != null || (!withinBounds(xi, yi)) || (!withinBounds(xf, yf))) {
 			return false;
 		}
-		return directedValidMove(xi, yi, xf, yf);
-	}
-
-	private int directionFunc() {
-		if (fireTurn) {
-			direction = 1;
-		} else {
-			direction = -1;
-		}
-		return direction;
-	}
-
-	/** Checks to see if there is any valid move in the up direction */
-	private boolean directedValidMove(int xi, int yi, int xf, int yf) {
-		if ((xf == xi + (direction * 1)) && ((yf == yi + 1) || (yf == yi - 1))) {
-			return true;
-		} else if (board[xi + (direction * 1)][yi + 1] != null) {
-			if ((xf == xi + (direction * 2)) && ((yf == yi + 2))) {
-				return true;
-			}
-		} else if (board[xi + (direction * 1)][yi - 1] != null) {
-			if ((xf == xi + (direction * 2)) && ((yf == yi - 2))) {
-				return true;
-			}
-		}
 		if (board[xi][yi].isKing()) {
-			int reverse;
-			if (direction == 1) {
-				reverse = -1;
-			} else {
-				reverse = 1;
-			}
-			if ((xf == xi + (reverse * 1)) && ((yf == yi + 1) || (yf == yi - 1))) {
+			if ((xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) || (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1))) {
 				return true;
-			} else if (board[xi + (reverse * 1)][yi + 1] != null) {
-				if ((xf == xi + (reverse * 2)) && ((yf == yi + 2))) {
+			}
+			if (board[xi][yi].isFire()) {
+				Piece rightUpPiece = board[xi + 1][yi + 1];
+				if (rightUpPiece != null && (!rightUpPiece.isFire())) {
+					if (xf == xi + 2 && yf == yi + 2) {
+						return true;
+					}
+				}
+				Piece leftUpPiece = board[xi + 1][yi - 1];
+				if (leftUpPiece != null && (!leftUpPiece.isFire())) {
+					if (xf == xi + 2 && yf == yi - 2) {
+						return true;
+					}
+				}
+			}
+			else if (!board[xi][yi].isFire()) {
+				Piece rightDownPiece = board[xi - 1][yi + 1];
+				if (rightDownPiece != null && (rightDownPiece.isFire())) {
+					if (xf == xi - 2 && yf == yi + 2) {
+						return true;
+					}
+				}
+				Piece leftDownPiece = board[xi - 1][yi - 1];
+				if (leftDownPiece != null && (leftDownPiece.isFire())) {
+					if (xf == xi - 2 && yf == yi - 2) {
+						return true;
+					}
+				}
+			}
+		} else if (board[xi][yi].isFire()) {
+			if (xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) {
+				return true;
+			}
+			Piece rightPiece = board[xi + 1][yi + 1];
+			if (rightPiece != null && (!rightPiece.isFire())) {
+				if (xf == xi + 2 && yf == yi + 2) {
 					return true;
 				}
-			} else if (board[xi + (reverse * 1)][yi - 1] != null) {
-				if ((xf == xi + (reverse * 2)) && ((yf == yi - 2))) {
+			}
+			Piece leftPiece = board[xi + 1][yi - 1];
+			if (leftPiece != null && (!leftPiece.isFire())) {
+				if (xf == xi + 2 && yf == yi - 2) {
+					return true;
+				}
+			}
+		} else if (!board[xi][yi].isFire()) {
+			if (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1)) {
+				return true;
+			}
+			Piece rightPiece = board[xi - 1][yi + 1];
+			if (rightPiece != null && (rightPiece.isFire())) {
+				if (xf == xi - 2 && yf == yi + 2) {
+					return true;
+				}
+			}
+			Piece leftPiece = board[xi - 1][yi - 1];
+			if (leftPiece != null && (leftPiece.isFire())) {
+				if (xf == xi - 2 && yf == yi - 2) {
 					return true;
 				}
 			}
@@ -222,14 +242,13 @@ public class Board {
 	  * that square. */
 	public void select(int x, int y) {
 		if (board[x][y] == null) {
-			board[x][y].move(x, y);
+			selectedPiece.move(x, y);
+			moved = true;
 		} else {
-			if (!selected || (selected && !moved)) {
-				selectedPiece = board[x][y];
-				selectedX = x;
-				selectedY = y;
-				selected = true;
-			}
+			selectedPiece = board[x][y];
+			selectedX = x;
+			selectedY = y;
+			selected = true;
 		}
 	}
 
@@ -297,7 +316,6 @@ public class Board {
 		selectedPiece = null;
 		selectedX = 0;
 		selectedY = 0;
-		direction = directionFunc();
 	}
 
 	/** Returns the winner of the game. "Fire", "Water", "No one" (tie /

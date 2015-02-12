@@ -81,7 +81,7 @@ public class Piece {
 			Piece thisBomb = board.remove(x, y);
 			for (int i = x - 1; i < 3; i += 2) {
 				for (int j = y - 1; j < 3; i += 2) {
-					if (!this.isShield() || (this != null)) {
+					if (!board.pieceAt(i, j).isShield() || (board.pieceAt(i, j) != null)) {
 						board.remove(i, j).beenCaptured = true;
 					}
 				}
@@ -89,6 +89,12 @@ public class Piece {
 		}
 		xPos = x;
 		yPos = y;
+		if (this.isFire() && this.xPos == 7 && !this.isKing()) {
+			this.crowned = true;
+		}
+		else if (!this.isFire() && this.xPos == 0 && !this.isKing()) {
+			this.crowned = true;
+		}
 	}
 
 	private int[] midpoint(int x, int y) {
