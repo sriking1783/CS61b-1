@@ -187,7 +187,7 @@ public class Board {
 			leftDownPiece = board[xi - 1][yi - 1];
 		}
 			
-		if (board[xi][yi].isKing()) {
+		if (board[xi][yi] != null && board[xi][yi].isKing()) {
 			if ((xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) || (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1))) {
 				return true;
 			}
@@ -211,7 +211,7 @@ public class Board {
 					return true;
 				}
 			}
-		} else if (board[xi][yi].isFire()) {
+		} else if (board[xi][yi] != null && board[xi][yi].isFire()) {
 			if (xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) {
 				return true;
 			}
@@ -225,7 +225,7 @@ public class Board {
 					return true;
 				}
 			}
-		} else if (!board[xi][yi].isFire()) {
+		} else if (board[xi][yi] != null && !board[xi][yi].isFire()) {
 			if (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1)) {
 				return true;
 			}
