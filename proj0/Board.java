@@ -14,24 +14,24 @@ public class Board {
 	public static void main (String[] args) {
 		Board b = new Board(false);
 		b.getBoardGUI();
-		while (b.winner() == null) {
-			while(!StdDrawPlus.isSpacePressed()) {
-				if (StdDrawPlus.mousePressed()) {
-	                double x = StdDrawPlus.mouseX();
-	                double y = StdDrawPlus.mouseY();
-	                StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
-	                if (b.canSelect((int) x, (int) y)) {
-	                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-	                	b.select((int) x, (int) y);
-	                }
-	            }
-	            b.updatePiecesGUI();
-	            if (b.canEndTurn()) {
-	            	b.endTurn();
-	            }
-			}  
-			StdDrawPlus.show(100);      
-		}
+		// while (b.winner() == null) {
+		// 	while(!StdDrawPlus.isSpacePressed()) {
+		// 		if (StdDrawPlus.mousePressed()) {
+	 //                double x = StdDrawPlus.mouseX();
+	 //                double y = StdDrawPlus.mouseY();
+	 //                StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
+	 //                if (b.canSelect((int) x, (int) y)) {
+	 //                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+	 //                	b.select((int) x, (int) y);
+	 //                }
+	 //            }
+	 //            b.updatePiecesGUI();
+	 //            if (b.canEndTurn()) {
+	 //            	b.endTurn();
+	 //            }
+		// 	}  
+		// 	StdDrawPlus.show(100);      
+		// }
 
 	}
 
