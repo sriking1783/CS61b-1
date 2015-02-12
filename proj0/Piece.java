@@ -78,13 +78,10 @@ public class Piece {
 			this.crowned = true;
 		}
 		board.place(this, x, y);
-		board.remove(xPos, yPos);
+		board.remove(xPos, yPos).captures = true;
 		if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
 			int[] middlePoint = midpoint(x, y);
-			if (board[middlePoint[0]][middlePoint[1]] != null) {
-				this.captures = true;
-				board.remove(middlePoint[0], middlePoint[1]);
-			}
+			board.remove(middlePoint[0], middlePoint[1]);
 		}
 		if (this.isBomb()) {
 			board.remove(x, y);
@@ -96,7 +93,6 @@ public class Piece {
 				}
 			}
 		}
-		
 		xPos = x;
 		yPos = y;
 	}
