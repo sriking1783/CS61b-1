@@ -254,6 +254,8 @@ public class Board {
 	public void select(int x, int y) {
 		if (board[x][y] == null) {
 			selectedPiece.move(x, y);
+			selectedX = x;
+			selectedY = y;
 			moved = true;
 			if (selectedPiece.hasCaptured()) {
 				captured = true;
