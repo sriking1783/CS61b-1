@@ -170,29 +170,42 @@ public class Board {
 		if (board[xf][yf] != null || (!withinBounds(xi, yi)) || (!withinBounds(xf, yf))) {
 			return false;
 		}
+		Piece rightUpPiece = null;
+		Piece leftUpPiece = null;
+		Piece rightDownPiece = null;
+		Piece leftDownPiece = null;
+		if (withinBounds(xi + 1, yi + 1)) {
+			rightUpPiece = board[xi + 1][yi + 1];
+		}
+		if (withinBounds(xi + 1, yi - 1)) {
+			leftUpPiece = board[xi + 1][yi - 1];
+		}
+		if (withinBounds(xi - 1, yi + 1)) {
+			rightDownPiece = board[xi - 1][yi + 1];
+		}
+		if (withinBounds(xi - 1, yi - 1)) {
+			leftDownPiece = board[xi - 1][yi - 1];
+		}
+			
 		if (board[xi][yi].isKing()) {
 			if ((xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) || (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1))) {
 				return true;
 			}
-			Piece rightUpPiece = board[xi + 1][yi + 1];
 			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi + 2) {
 					return true;
 				}
 			}
-			Piece leftUpPiece = board[xi + 1][yi - 1];
 			if (leftUpPiece != null && (!leftUpPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi - 2) {
 					return true;
 				}
 			}
-			Piece rightDownPiece = board[xi - 1][yi + 1];
 			if (rightDownPiece != null && (rightDownPiece.isFire())) {
 				if (xf == xi - 2 && yf == yi + 2) {
 					return true;
 				}
 			}
-			Piece leftDownPiece = board[xi - 1][yi - 1];
 			if (leftDownPiece != null && (leftDownPiece.isFire())) {
 				if (xf == xi - 2 && yf == yi - 2) {
 					return true;
@@ -202,14 +215,12 @@ public class Board {
 			if (xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) {
 				return true;
 			}
-			Piece rightPiece = board[xi + 1][yi + 1];
-			if (rightPiece != null && (!rightPiece.isFire())) {
+			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi + 2) {
 					return true;
 				}
 			}
-			Piece leftPiece = board[xi + 1][yi - 1];
-			if (leftPiece != null && (!leftPiece.isFire())) {
+			if (leftUpPiece != null && (!leftUpPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi - 2) {
 					return true;
 				}
@@ -218,14 +229,12 @@ public class Board {
 			if (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1)) {
 				return true;
 			}
-			Piece rightPiece = board[xi - 1][yi + 1];
-			if (rightPiece != null && (rightPiece.isFire())) {
+			if (rightDownPiece != null && (rightDownPiece.isFire())) {
 				if (xf == xi - 2 && yf == yi + 2) {
 					return true;
 				}
 			}
-			Piece leftPiece = board[xi - 1][yi - 1];
-			if (leftPiece != null && (leftPiece.isFire())) {
+			if (leftDownPiece != null && (leftDownPiece.isFire())) {
 				if (xf == xi - 2 && yf == yi - 2) {
 					return true;
 				}
