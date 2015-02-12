@@ -316,6 +316,7 @@ public class Board {
 		selected = false;
 		moved = false;
 		captured = false;
+		selectedPiece.doneCapturing();
 		selectedPiece = null;
 		selectedX = 0;
 		selectedY = 0;
