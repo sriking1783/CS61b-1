@@ -19,6 +19,7 @@ public class Piece {
 		xPos = x;
 		yPos = y;
 		pieceType = type;
+		crowned = false;
 	}
 
 	/** Returns whether or not the piece is a fire piece. */

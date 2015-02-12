@@ -42,6 +42,7 @@ public class TestBoard {
     @Test
     public void testPlace() {
         Board b1 = new Board(false);
+        assertEquals(null, b1.pieceAt(5, 3));
         b1.place(new Piece(false, b1, 5, 3, "shield"), 5, 3);
         Piece p1 = b1.pieceAt(5, 3);
         assertEquals(false, p1 == null);
@@ -64,12 +65,20 @@ public class TestBoard {
         assertEquals(true, p3.isBomb());
         assertEquals(false, p3.isShield());
 
-        // b1.place(new Piece(false, b1, 2, 0, "shield"), 8, 0);
-        // Piece p4 = b1.pieceAt(2, 0);
-        // assertEquals(true, p4.isFire());
-        // assertEquals(false, !(p4.isFire()));
-        // assertEquals(false, p4.isBomb());
-        // assertEquals(false, p4.isShield());
+        b1.place(new Piece(false, b1, 2, 0, "shield"), 8, 0);
+        Piece p4 = b1.pieceAt(2, 0);
+        assertEquals(true, p4.isFire());
+        assertEquals(false, !(p4.isFire()));
+        assertEquals(false, p4.isBomb());
+        assertEquals(false, p4.isShield());
+    }
+
+    @Test
+    public void testSelect() {
+    	Board b = new Board(false);
+		if(b.canSelect(0, 2)) {
+			b.select(0, 2);
+		}
     }
 
     public static void main(String[] args) {

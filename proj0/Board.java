@@ -2,6 +2,13 @@ public class Board {
 	private static boolean beEmpty;
 	private Piece[][] board;
 	private final int SIZE = 8;
+	private boolean playerTurn;
+	private boolean selected;
+	private boolean moved;
+	private boolean captured;
+	private Piece selectedPiece;
+	private int selectedX;
+	private int selectedY;
 
 	/** Starts a GUI supported version of the game. */
 	public static void main (String[] args) {
@@ -19,6 +26,7 @@ public class Board {
 		if (!shouldBeEmpty) {
 			this.addInitPieces();
 		}
+		playerTurn = true;
 	}
 
 	/** Creates a board that represents the GUI */
@@ -37,7 +45,7 @@ public class Board {
 			}
 		}
 		if (!beEmpty) {
-			this.addPiecesGUI();
+			this.updatePiecesGUI();
 		}
 	}
 
@@ -65,7 +73,7 @@ public class Board {
 
 	/** Adds pieces to the GUI in all the appropriate tiles where there
 	  * already exists a piece */
-	private void addPiecesGUI() {
+	private void updatePiecesGUI() {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 				if (board[i][j] != null) {
@@ -97,7 +105,7 @@ public class Board {
 	/** Gets the piece at posistion (x, y) on the board, or null if there
 	  * if there is no piece. If (x, y) are out of bounds, returns null. */
 	public Piece pieceAt(int x, int y) {
-		if ((x < SIZE && y < SIZE && x > 0 && y > 0) && (board[x][y] != null)) {
+		if ((x < SIZE && y < SIZE && x >= 0 && y >= 0) && (board[x][y] != null)) {
 			return board[x][y];
 		}
 		return null;
@@ -105,6 +113,23 @@ public class Board {
 
 	/** Returns true if the square at (x, y) can be selected. */
 	public boolean canSelect(int x, int y) {
+		if (board[x][y].isFire() == playerTurn) {
+			if (board[x][y] != null) {
+				if (!selected || (selected && !moved)) {
+					return true;
+				}
+			} else {
+				if ((selected && !moved) && (board[x][y] == null)) {
+					if (validMove(selectedX, selectedY, x, y)) {
+						return true;
+					}
+				} else if ((selected && captured)) {
+					if (validMove(selectedX, selectedY, x, y)) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
@@ -112,34 +137,56 @@ public class Board {
 	  * or capture to (xf, yf), strictly from a geometry/piece-race point
 	  * of view. validMove does not need to take into consideration whose
 	  * turn it is or if a move has already been made, but rather can. 
-	  * (Note: method is not required and will not be tested.) */
-	public boolean validMove(int xi, int yi, int xf, int yf) {
-		return false;
+	  * (Note: method is NOT required and will not be tested.) */
+	private boolean validMove(int xi, int yi, int xf, int yf) {
+		return true;
 	}
 
-	/** Selects the piece at (x, y) if possible. Optionally, it is recommended
-	  * to color the background of the selected square white on the GUI via
-	  * the pen color function. For any piece to perform a capture, that
-	  * piece myst have been selected first. */
+	/** Selects the square at (x, y). This method assumes canSelect (x,y)
+	  * returns true. Optionally, it is recommended to color the background
+	  * of the selected square white on the GUI via the pen color function.
+	  * For any piece to perform a capture, that piece must have been selected
+	  * first. If you select a square with a piece, you are prepping that
+	  * piece for movement. If you select an empty square (assuming canSelect
+	  * returns true), you should move your most recently selected piece to
+	  * that square. */
 	public void select(int x, int y) {
-
+		if (this.canSelect(x, y)) {
+			if (board[x][y] == null) {
+				// move the piece to new location
+				board[x][y] = selectedPiece;
+			} else {
+				if (!selected || (selected && !moved)) {
+					selectedPiece = board[x][y];
+					selectedX = x;
+					selectedY = y;
+					selected = true;
+				}
+			}
+		}
 	}
 
 	/** Places p at (x, y). If (x, y) is out of bounds or if p is null, does
 	  * nothing. If p already exists in the current Board, first removes it
-	  * from its initial position. If another piece already exists at (x, y),
-	  * p will replace that piece. (This method is potentially useful for creating
-	  * specific test circumstances.) */
+	  * from its initial position (see findAndRemove() method). If another piece
+	  * already exists at (x, y), p will replace that piece. (This method is
+	  * potentially useful for creating specific test circumstances.) */
 	public void place(Piece p, int x, int y) {
-		if ((x < SIZE && y < SIZE && x > 0 && y > 0) || (p != null)) {
-			for (int i = 0; i < SIZE; i++) {
-				for (int j = 0; j < SIZE; j++) {
-					if (p == board[i][j]) {
-						board[i][j] = null;
-					}
+		if ((x < SIZE && y < SIZE && x >= 0 && y >= 0) && (p != null)) {
+			this.findAndRemove(p);
+			board[x][y] = p;
+		}
+	}
+
+	/** If p already exists in the current Board, it removes it from the initial
+	  *	position. */
+	private void findAndRemove(Piece piece) {
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				if (piece == board[i][j]) {
+					Piece p = this.remove(i, j);
 				}
 			}
-			board[x][y] = p;
 		}
 	}
 
@@ -148,7 +195,16 @@ public class Board {
 	  * message. If there is no piece at (x, y), returns null and prints an
 	  * appropriate message. */
 	public Piece remove(int x, int y) {
-		return null;
+		if (x > SIZE || y > SIZE || x < 0|| y < 0) {
+			System.out.println("Either x or y is out of bounds.");
+			return null;
+		} else if (board[x][y] == null) {
+			System.out.println("There is no piece in this position.");
+			return null;
+		}
+		Piece removedPiece = board[x][y];
+		board[x][y] = null;
+		return removedPiece;
 	}
 
 	/** Returns whether or not the the current player can end their turn.
