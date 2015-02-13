@@ -71,18 +71,23 @@ public class Piece {
 	  * is valid. Moves the piece to (x, y), capturing any intermediate
 	  * piece if applicable. This will be a difficult method to write. */
 	public void move(int x, int y) {
-		if (this.isFire() && x == 7 && !this.isKing()) {
-			this.crowned = true;
-		}
-		else if (!this.isFire() && x == 0 && !this.isKing()) {
-			this.crowned = true;
-		}
-		board.place(this, x, y);
-		board.remove(xPos, yPos).captures = true;
-		if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
+		if ((Math.abs(x - xPos) == 1) && (Math.abs(y - yPos) == 1)) {
+			this.shouldCrown(x);
+			board.place(this, x, y);
+			board.remove(xPos, yPos).captures = true;
+			xPos = x;
+			yPos = y;
+		} else if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
 			int[] middlePoint = midpoint(x, y);
-			board.remove(middlePoint[0], middlePoint[1]);
-		}
+			if (board.pieceAt(middlePoint[0], middlePoint[1]) != null) {
+				this.shouldCrown(x);
+				board.place(this, x, y);
+				board.remove(xPos, yPos).captures = true;
+				board.remove(middlePoint[0], middlePoint[1]);
+				xPos = x;
+				yPos = y;
+			}
+					}
 		if (this.isBomb()) {
 			board.remove(x, y);
 			for (int i = x - 1; i < x + 1; i += 2) {
@@ -93,8 +98,15 @@ public class Piece {
 				}
 			}
 		}
-		xPos = x;
-		yPos = y;
+	}
+
+	private void shouldCrown(int x) {
+		if (this.isFire() && x == 7 && !this.isKing()) {
+			this.crowned = true;
+		}
+		else if (!this.isFire() && x == 0 && !this.isKing()) {
+			this.crowned = true;
+		}
 	}
 
 	private int[] midpoint(int x, int y) {
