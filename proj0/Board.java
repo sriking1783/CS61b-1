@@ -44,6 +44,7 @@ public class Board {
 			this.addInitPieces();
 		}
 		fireTurn = true;
+		captured = false;
 	}
 
 	/** Creates a board that represents the GUI */
@@ -151,10 +152,12 @@ public class Board {
 			}
 		} else if (board[x][y] == null) {
 			if ((selected && !moved)) {
+				System.out.println("here");
 				if (validMove(selectedX, selectedY, x, y)) {
 					return true;
 				}
 			} else if ((selected && captured)) {
+				System.out.println("there");
 				if (validMove(selectedX, selectedY, x, y)) {
 					return true;
 				}
@@ -264,6 +267,8 @@ public class Board {
 			moved = true;
 			if (selectedPiece.hasCaptured()) {
 				captured = true;
+			} else {
+				captured = false;
 			}
 		} else {
 			selectedPiece = board[x][y];

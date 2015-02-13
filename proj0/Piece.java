@@ -74,7 +74,7 @@ public class Piece {
 		if ((Math.abs(x - xPos) == 1) && (Math.abs(y - yPos) == 1)) {
 			this.shouldCrown(y);
 			board.place(this, x, y);
-			board.remove(xPos, yPos).captures = true;
+			board.remove(xPos, yPos);
 			xPos = x;
 			yPos = y;
 		} else if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
