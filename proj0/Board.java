@@ -73,15 +73,15 @@ public class Board {
 			for (int j = 0; j < size; j++) {
 				if ((j == 0) && (i % 2 == 0)) {
 					board[i][j] = new Piece(true, this, i, j, "pawn");
-				} else if ((j == 1) && (Math.abs(i % 2 == 1))) {
+				} else if ((j == 1) && (Math.abs(i % 2) == 1)) {
 					board[i][j] = new Piece(true, this, i, j, "shield");
 				} else if ((j == 2) && (i % 2 == 0)) {
 					board[i][j] = new Piece(true, this, i, j, "bomb");
-				} else if ((j == 5) && (Math.abs(i % 2 == 1))) {
+				} else if ((j == 5) && (Math.abs(i % 2) == 1)) {
 					board[i][j] = new Piece(false, this, i, j, "bomb");
 				} else if ((j == 6) && (i % 2 == 0)) {
 					board[i][j] = new Piece(false, this, i, j, "shield");
-				} else if ((j == 7) && (Math.abs(i % 2 == 1))) {
+				} else if ((j == 7) && (Math.abs(i % 2) == 1)) {
 					board[i][j] = new Piece(false, this, i, j, "pawn");
 				}
 			}
