@@ -85,18 +85,20 @@ public class Piece {
 			board.remove(middlePoint[0], middlePoint[1]);
 			xPos = x;
 			yPos = y;
-		}
-		if (this.isBomb()) {
+			if (this.isBomb()) {
 			board.remove(this.xPos, this.yPos);
 			for (int i = x - 1; i <= x + 1; i += 2) {
 				for (int j = y - 1; j <= y + 1; j += 2) {
 					if (board.pieceAt(i, j) != null && !board.pieceAt(i, j).isShield()) {
-						board.remove(i, j);
+						if (!(board.pieceAt(i, j).isFire() == this.isFire())) {
+							board.remove(i, j);
+						}
 					}
 				}
 			}
 		}
 	}
+}
 
 	private void shouldCrown(int y) {
 		if (this.isFire() && y == 7 && !this.isKing()) {

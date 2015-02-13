@@ -18,9 +18,9 @@ public class Board {
 			if (StdDrawPlus.mousePressed()) {
                 double x = StdDrawPlus.mouseX();
                 double y = StdDrawPlus.mouseY();
-                StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
+                // StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
                 if (b.canSelect((int) x, (int) y)) {
-                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+                	// StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
                 	b.select((int) x, (int) y);
                 }
             }
@@ -176,17 +176,17 @@ public class Board {
 			rightUpPiece = board[xi + 1][yi + 1];
 		}
 		if (withinBounds(xi + 1, yi - 1)) {
-			leftUpPiece = board[xi + 1][yi - 1];
+			rightDownPiece = board[xi + 1][yi - 1];
 		}
 		if (withinBounds(xi - 1, yi + 1)) {
-			rightDownPiece = board[xi - 1][yi + 1];
+			leftUpPiece = board[xi - 1][yi + 1];
 		}
 		if (withinBounds(xi - 1, yi - 1)) {
 			leftDownPiece = board[xi - 1][yi - 1];
 		}
 			
 		if (board[xi][yi] != null && board[xi][yi].isKing()) {
-			if ((xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) || (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1))) {
+			if ((yf == yi + 1 && (xf == xi + 1 || xf == xi - 1)) || (yf == yi - 1 && (xf == xi + 1 || xf == xi - 1))) {
 				return true;
 			}
 			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
@@ -194,12 +194,12 @@ public class Board {
 					return true;
 				}
 			}
-			if (leftUpPiece != null && (!leftUpPiece.isFire())) {
+			if (rightDownPiece != null && (!rightDownPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi - 2) {
 					return true;
 				}
 			}
-			if (rightDownPiece != null && (rightDownPiece.isFire())) {
+			if (leftUpPiece != null && (leftUpPiece.isFire())) {
 				if (xf == xi - 2 && yf == yi + 2) {
 					return true;
 				}
@@ -210,7 +210,7 @@ public class Board {
 				}
 			}
 		} else if (board[xi][yi] != null && board[xi][yi].isFire()) {
-			if (xf == xi + 1 && (yf == yi + 1 || yf == yi - 1)) {
+			if (yf == yi + 1 && (xf == xi + 1 || xf == xi - 1)) {
 				return true;
 			}
 			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
@@ -219,16 +219,16 @@ public class Board {
 				}
 			}
 			if (leftUpPiece != null && (!leftUpPiece.isFire())) {
-				if (xf == xi + 2 && yf == yi - 2) {
+				if (xf == xi - 2 && yf == yi + 2) {
 					return true;
 				}
 			}
 		} else if (board[xi][yi] != null && !board[xi][yi].isFire()) {
-			if (xf == xi - 1 && (yf == yi + 1 || yf == yi - 1)) {
+			if (yf == yi - 1 && (xf == xi + 1 || xf == xi - 1)) {
 				return true;
 			}
 			if (rightDownPiece != null && (rightDownPiece.isFire())) {
-				if (xf == xi - 2 && yf == yi + 2) {
+				if (xf == xi + 2 && yf == yi - 2) {
 					return true;
 				}
 			}
