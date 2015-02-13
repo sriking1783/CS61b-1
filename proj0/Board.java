@@ -195,6 +195,7 @@ public class Board {
 					return true;
 				}
 			}
+			
 			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi + 2) {
 					return true;
