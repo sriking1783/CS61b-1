@@ -27,8 +27,8 @@ public class TestPiece {
     @Test
     public void testSimpleMove() {
         Board b = new Board(true);
-        Piece px = new Piece(true, b, 3, 3, "shield");
-        Piece py = new Piece(false, b, 4, 4, "pawn");
+        Piece px = new Piece(false, b, 3, 3, "shield");
+        Piece py = new Piece(true, b, 4, 4, "pawn");
         b.place(px, 3, 3);
         b.place(py, 4, 4);
         assertTrue(b.pieceAt(3, 3) != null);
@@ -51,9 +51,9 @@ public class TestPiece {
         b.place(preKing2, 6, 6);
         assertTrue(b.pieceAt(6, 6) != null);
         assertFalse(b.pieceAt(6, 6).isKing());
-        preKing2.move(7, 5);
+        preKing2.move(5, 7);
         assertTrue(b.pieceAt(6, 6) == null);
-        assertEquals(preKing2, b.pieceAt(7, 5));
+        assertEquals(preKing2, b.pieceAt(5, 7));
         assertTrue(preKing2.isKing());
 
         /** Testing Water Kinging */
@@ -70,9 +70,9 @@ public class TestPiece {
         b.place(preKingW2, 1, 1);
         assertTrue(b.pieceAt(1, 1) != null);
         assertFalse(b.pieceAt(1, 1).isKing());
-        preKingW2.move(0, 2);
+        preKingW2.move(2, 0);
         assertTrue(b.pieceAt(1, 1) == null);
-        assertEquals(preKingW2, b.pieceAt(0, 2));
+        assertEquals(preKingW2, b.pieceAt(2, 0));
         assertTrue(preKingW2.isKing());
     }
 
@@ -107,16 +107,16 @@ public class TestPiece {
         assertTrue(preKing.isKing());
 
         /** Should not skip if no piece */
-        Piece preKing2 = new Piece (true, b, 5, 1, "pawn");
-        b.place(preKing2, 5, 1);
-        assertTrue(b.pieceAt(5, 1) != null);
-        assertFalse(b.pieceAt(5, 1).isKing());
-        b.select(5, 1);
-        if (b.canSelect(7, 3)) {
-            preKing2.move(7, 3);
+        Piece preKing2 = new Piece (true, b, 1, 5, "pawn");
+        b.place(preKing2, 1, 5);
+        assertTrue(b.pieceAt(1, 5) != null);
+        assertFalse(b.pieceAt(1, 5).isKing());
+        b.select(1, 5);
+        if (b.canSelect(3, 7)) {
+            preKing2.move(3, 7);
         }
-        assertTrue(b.pieceAt(5, 1) != null);
-        assertFalse(preKing2.equals(b.pieceAt(7, 3)));
+        assertTrue(b.pieceAt(1, 5) != null);
+        assertFalse(preKing2.equals(b.pieceAt(3, 7)));
         assertFalse(preKing2.hasCaptured());
         assertFalse(preKing2.isKing());
 

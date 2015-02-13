@@ -72,14 +72,14 @@ public class Piece {
 	  * piece if applicable. This will be a difficult method to write. */
 	public void move(int x, int y) {
 		if ((Math.abs(x - xPos) == 1) && (Math.abs(y - yPos) == 1)) {
-			this.shouldCrown(x);
+			this.shouldCrown(y);
 			board.place(this, x, y);
 			board.remove(xPos, yPos).captures = true;
 			xPos = x;
 			yPos = y;
 		} else if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
 			int[] middlePoint = midpoint(x, y);
-			this.shouldCrown(x);
+			this.shouldCrown(y);
 			board.place(this, x, y);
 			board.remove(xPos, yPos).captures = true;
 			board.remove(middlePoint[0], middlePoint[1]);
@@ -98,11 +98,11 @@ public class Piece {
 		}
 	}
 
-	private void shouldCrown(int x) {
-		if (this.isFire() && x == 7 && !this.isKing()) {
+	private void shouldCrown(int y) {
+		if (this.isFire() && y == 7 && !this.isKing()) {
 			this.crowned = true;
 		}
-		else if (!this.isFire() && x == 0 && !this.isKing()) {
+		else if (!this.isFire() && y == 0 && !this.isKing()) {
 			this.crowned = true;
 		}
 	}
