@@ -95,6 +95,10 @@ public class Board {
 			for (int j = 0; j < size; j++) {
 				if (board[i][j] != null) {
 					String type = "";
+					String crowned = "";
+					if (board[i][j].isKing()) {
+						crowned = "-crowned";
+					}
 					if (board[i][j].isFire()) {
 						if (board[i][j].isBomb()) {
 							type = "bomb-fire";
@@ -112,7 +116,7 @@ public class Board {
 							type = "pawn-water";
 						}
 					}
-					String image = "img/" + type + ".png";
+					String image = "img/" + type + crowned + ".png";
 					StdDrawPlus.picture(i + .5, j + .5, image, 1, 1);
 				}
 			}
@@ -186,8 +190,10 @@ public class Board {
 		}
 			
 		if (board[xi][yi] != null && board[xi][yi].isKing()) {
-			if ((yf == yi + 1 && (xf == xi + 1 || xf == xi - 1)) || (yf == yi - 1 && (xf == xi + 1 || xf == xi - 1))) {
-				return true;
+			if (!((yi == 7) || (yi == 0))) {
+				if ((yf == yi + 1 && (xf == xi + 1 || xf == xi - 1)) || (yf == yi - 1 && (xf == xi + 1 || xf == xi - 1))) {
+					return true;
+				}
 			}
 			if (rightUpPiece != null && (!rightUpPiece.isFire())) {
 				if (xf == xi + 2 && yf == yi + 2) {
