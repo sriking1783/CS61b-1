@@ -152,12 +152,10 @@ public class Board {
 			}
 		} else if (board[x][y] == null) {
 			if ((selected && !moved)) {
-				System.out.println("here");
 				if (validMove(selectedX, selectedY, x, y)) {
 					return true;
 				}
 			} else if ((selected && captured)) {
-				System.out.println("there");
 				if (validMove(selectedX, selectedY, x, y)) {
 					return true;
 				}
