@@ -1,5 +1,5 @@
 public class Board {
-	private static boolean beEmpty;
+	private boolean beEmpty;
 	private Piece[][] board;
 	private int size = 8;
 	private boolean fireTurn;
@@ -39,7 +39,7 @@ public class Board {
 	  * for testing purposes. */
 	public Board(boolean shouldBeEmpty) {
 		board = new Piece[size][size];
-		board.beEmpty = shouldBeEmpty;
+		this.beEmpty = shouldBeEmpty;
 		if (!shouldBeEmpty) {
 			this.addInitPieces();
 		}
