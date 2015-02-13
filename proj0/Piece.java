@@ -90,9 +90,7 @@ public class Piece {
 			for (int i = x - 1; i <= x + 1; i += 2) {
 				for (int j = y - 1; j <= y + 1; j += 2) {
 					if (board.pieceAt(i, j) != null && !board.pieceAt(i, j).isShield()) {
-						// if (!(board.pieceAt(i, j).isFire() == this.isFire())) {
-							board.remove(i, j);
-						// }
+						board.remove(i, j);
 					}
 				}
 			}
