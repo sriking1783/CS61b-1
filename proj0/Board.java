@@ -15,24 +15,22 @@ public class Board {
 		Board b = new Board(false);
 		b.getBoardGUI();
 		while (b.winner() == null) {
-			while(!StdDrawPlus.isSpacePressed()) {
-				if (StdDrawPlus.mousePressed()) {
-	                double x = StdDrawPlus.mouseX();
-	                double y = StdDrawPlus.mouseY();
-	                StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
-	                if (b.canSelect((int) x, (int) y)) {
-	                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
-	                	b.select((int) x, (int) y);
-	                }
-	            }
-	            b.updatePiecesGUI();
-	            if (b.canEndTurn()) {
-	            	b.endTurn();
-	            }
-			}  
+			if (StdDrawPlus.mousePressed()) {
+                double x = StdDrawPlus.mouseX();
+                double y = StdDrawPlus.mouseY();
+                StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
+                if (b.canSelect((int) x, (int) y)) {
+                	StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+                	b.select((int) x, (int) y);
+                }
+            }
+            b.getBoardGUI();
+            b.updatePiecesGUI();
+            if (StdDrawPlus.isSpacePressed() && b.canEndTurn()) {
+            	b.endTurn();
+            }
 			StdDrawPlus.show(100);      
 		}
-
 	}
 
 	/** The constructor for Board. If shouldBeEmpty is true, initializes

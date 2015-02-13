@@ -111,7 +111,10 @@ public class TestPiece {
         b.place(preKing2, 5, 1);
         assertTrue(b.pieceAt(5, 1) != null);
         assertFalse(b.pieceAt(5, 1).isKing());
-        preKing2.move(7, 3);
+        b.select(5, 1);
+        if (b.canSelect(7, 3)) {
+            preKing2.move(7, 3);
+        }
         assertTrue(b.pieceAt(5, 1) != null);
         assertFalse(preKing2.equals(b.pieceAt(7, 3)));
         assertFalse(preKing2.hasCaptured());

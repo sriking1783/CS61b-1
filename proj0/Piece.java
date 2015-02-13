@@ -79,19 +79,17 @@ public class Piece {
 			yPos = y;
 		} else if ((Math.abs(x - xPos) == 2) && (Math.abs(y - yPos) == 2)) {
 			int[] middlePoint = midpoint(x, y);
-			if (board.pieceAt(middlePoint[0], middlePoint[1]) != null) {
-				this.shouldCrown(x);
-				board.place(this, x, y);
-				board.remove(xPos, yPos).captures = true;
-				board.remove(middlePoint[0], middlePoint[1]);
-				xPos = x;
-				yPos = y;
-			}
-					}
+			this.shouldCrown(x);
+			board.place(this, x, y);
+			board.remove(xPos, yPos).captures = true;
+			board.remove(middlePoint[0], middlePoint[1]);
+			xPos = x;
+			yPos = y;
+		}
 		if (this.isBomb()) {
-			board.remove(x, y);
-			for (int i = x - 1; i < x + 1; i += 2) {
-				for (int j = y - 1; j < y + 1; j += 2) {
+			board.remove(this.xPos, this.yPos);
+			for (int i = x - 1; i <= x + 1; i += 2) {
+				for (int j = y - 1; j <= y + 1; j += 2) {
 					if (board.pieceAt(i, j) != null && !board.pieceAt(i, j).isShield()) {
 						board.remove(i, j);
 					}
