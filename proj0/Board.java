@@ -39,7 +39,7 @@ public class Board {
 	  * for testing purposes. */
 	public Board(boolean shouldBeEmpty) {
 		board = new Piece[size][size];
-		beEmpty = shouldBeEmpty;
+		board.beEmpty = shouldBeEmpty;
 		if (!shouldBeEmpty) {
 			this.addInitPieces();
 		}

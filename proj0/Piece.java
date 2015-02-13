@@ -110,8 +110,8 @@ public class Piece {
 	}
 
 	private int[] midpoint(int x, int y) {
-		int a = (x + xPos) / 2;
-		int b = (y + yPos) / 2;
+		int a = (x + xPos) >>> 1;
+		int b = (y + yPos) >>> 1;
 		return new int[] {a, b};
 	}
 
