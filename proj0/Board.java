@@ -10,7 +10,8 @@ public class Board {
 	private int selectedX;
 	private int selectedY;
 
-	/** Starts a GUI supported version of the game. */
+	/** Starts a GUI supported version of the game. (Could not figure
+	  * out how to change the color of the selected tile). */
 	public static void main (String[] args) {
 		Board b = new Board(false);
 		b.getBoardGUI();
