@@ -120,33 +120,20 @@ public class TestPiece {
         assertFalse(preKing2.hasCaptured());
         assertFalse(preKing2.isKing());
 
-        // Piece preKing2 = new Piece (true, b, 6, 6, "pawn");
-        // b.place(preKing2, 6, 6);
-        // assertTrue(b.pieceAt(6, 6) != null);
-        // assertFalse(b.pieceAt(6, 6).isKing());
-        // preKing2.move(7, 5);
-        // assertTrue(b.pieceAt(6, 6) == null);
-        // assertEquals(preKing2, b.pieceAt(7, 5));
-        // assertTrue(preKing2.isKing());
-
         /** Testing Water Kinging after Capture */
-        // Piece preKingW = new Piece (false, b, 1, 1, "pawn");
-        // b.place(preKingW, 1, 1);
-        // assertTrue(b.pieceAt(1, 1) != null);
-        // assertFalse(b.pieceAt(1, 1).isKing());
-        // preKingW.move(0, 0);
-        // assertTrue(b.pieceAt(1, 1) == null);
-        // assertEquals(preKingW, b.pieceAt(0, 0));
-        // assertTrue(preKingW.isKing());
-
-        // Piece preKingW2 = new Piece (false, b, 1, 1, "pawn");
-        // b.place(preKingW2, 1, 1);
-        // assertTrue(b.pieceAt(1, 1) != null);
-        // assertFalse(b.pieceAt(1, 1).isKing());
-        // preKingW2.move(0, 2);
-        // assertTrue(b.pieceAt(1, 1) == null);
-        // assertEquals(preKingW2, b.pieceAt(0, 2));
-        // assertTrue(preKingW2.isKing());
+        Piece preKing3 = new Piece (false, b, 2, 2, "pawn");
+        Piece captured3 = new Piece (true, b, 1, 1, "shield");
+        b.place(preKing3, 2, 2);
+        b.place(captured3, 1, 1);
+        assertTrue(b.pieceAt(2, 2) != null);
+        assertFalse(b.pieceAt(2, 2).isKing());
+        assertTrue(b.pieceAt(1, 1) != null);
+        preKing3.move(0, 0);
+        assertTrue(b.pieceAt(2, 2) == null);
+        assertEquals(preKing3, b.pieceAt(0, 0));
+        assertEquals(null, b.pieceAt(1, 1));
+        assertTrue(preKing3.hasCaptured());
+        assertTrue(preKing3.isKing());
     }
 
     @Test

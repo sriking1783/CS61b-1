@@ -18,10 +18,10 @@ public class Board {
 			if (StdDrawPlus.mousePressed()) {
                 double x = StdDrawPlus.mouseX();
                 double y = StdDrawPlus.mouseY();
-                // StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
                 if (b.canSelect((int) x, (int) y)) {
-                	// StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
                 	b.select((int) x, (int) y);
+                	// StdDrawPlus.setPenColor(StdDrawPlus.WHITE);
+                	// StdDrawPlus.filledSquare((int) x + .5, (int) y + .5, .5);
                 }
             }
             b.getBoardGUI();
