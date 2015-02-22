@@ -47,7 +47,6 @@ public class ApplicableIntList{
             curr = curr.tail;
             i--;
         }
-        return curr.head;
     }
 
     /** Applies the function f to every item in this list. */

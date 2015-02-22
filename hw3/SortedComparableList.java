@@ -14,11 +14,13 @@ public class SortedComparableList {
     public SortedComparableList(Comparable head0, SortedComparableList tail0) {
         head = head0;
         tail = tail0;
+        // REPLACE THIS LINE WITH YOUR SOLUTION
     }
 
     /** A list with null tail, and head = 0. */
     public SortedComparableList(){
         this(0, null);
+
     }
 
     /** Inserts Comparable c into its correct location in this list. */
@@ -139,6 +141,11 @@ public class SortedComparableList {
      *
      *  For example, if the input list is [ 3 7 4 2 2 ], the
      *  output list is [ 3 3 7 7 4 4 2 2 2 2].
+     *  You can assume the list is in sorted order when this method is
+     *  called.
+     *
+     *  For example, if the input list is [ 2 3 4 7 ], the
+     *  output list is [ 2 2 3 3 4 4 7 7 ].
      *
      *  NOTE: Do not try to make copies of the Comparables. Set
      *  the HEAD variable equal to the HEAD variable you are trying to

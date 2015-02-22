@@ -15,8 +15,8 @@ public class CalculatorTest {
      **/
     @Before
     public void setUp() {
-        // tester = new StaffCalculator(); // Comment me out to test your Calculator
-        tester = new Calculator();   // Un-comment me to test your Calculator
+        tester = new StaffCalculator(); // Comment me out to test your Calculator
+        // tester = new Calculator();   // Un-comment me to test your Calculator
     }
 
     // TASK 1: WRITE JUNIT TESTS

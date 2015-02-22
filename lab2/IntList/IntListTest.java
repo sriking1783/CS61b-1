@@ -87,7 +87,7 @@ public class IntListTest {
     @Test
     public void testCatenate() {
         IntList empty = IntList.list();
-        IntList A = IntList.list(1, 2, 3);
+        IntList A = InxwtList.list(1, 2, 3);
         IntList B = IntList.list(4, 5, 6, 7);
         IntList C = IntList.list(2, 4, 6, 8, 10);
 
