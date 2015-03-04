@@ -22,7 +22,7 @@ public class ULLMap<Key, Value> implements Map61B<Key, Value>, Iterable<Key> {
     public Value get(Key key) {
         Entry temp = front;
         while (temp != null) {
-            if (key.equals(temp.key)) {
+            if (key != null && key.equals(temp.key)) {
                 return temp.val;
             }
             temp = temp.next;
