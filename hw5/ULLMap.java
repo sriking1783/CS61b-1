@@ -151,9 +151,9 @@ public class ULLMap<Key, Value> implements Map61B<Key, Value>, Iterable<Key> {
         private ULLMap<Key, Value> umap;
     }
 
-    // public static Map<Value, Key> inverse(Map<Key, Value> m) {
-
-    // }
+    public static <Value, Key> ULLMap<Value, Key> invert(ULLMap<Key, Value> m) {
+        return null;
+    }
 
     /* Methods below are all challenge problems. Will not be graded in any way. 
      * Autograder will not test these. */
