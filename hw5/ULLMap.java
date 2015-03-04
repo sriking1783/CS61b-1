@@ -35,7 +35,7 @@ public class ULLMap<Key, Value> implements Map61B<Key, Value>, Iterable<Key> {
         Entry temp = front;
         int replace = 1;
         while (temp != null) {
-            if (key.equals(temp.key)) {
+            if (key != null && key.equals(temp.key)) {
                 temp.val = val;
                 replace -= 1;
                 break;
