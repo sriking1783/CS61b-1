@@ -152,7 +152,13 @@ public class ULLMap<Key, Value> implements Map61B<Key, Value>, Iterable<Key> {
     }
 
     public static <Value, Key> ULLMap<Value, Key> invert(ULLMap<Key, Value> m) {
-        return null;
+        ULLMap<Value, Key> returnMap = new ULLMap<Value, Key>();
+        for (Key k : m) {
+            if (!returnMap.containsKey(m.get(k))) {
+                returnMap.put(m.get(k), k);
+            }
+        }
+        return returnMap;
     }
 
     /* Methods below are all challenge problems. Will not be graded in any way. 
