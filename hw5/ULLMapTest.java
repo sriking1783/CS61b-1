@@ -29,9 +29,9 @@ public class ULLMapTest {
         System.out.println(umi.next());
         System.out.println(umi.next());
         System.out.println(umi.next());
+        System.out.println(umi.next());
     }
-    
-
+     
     /** Runs tests. */
     public static void main(String[] args) {
         jh61b.junit.textui.runClasses(ULLMapTest.class);

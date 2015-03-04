@@ -50,7 +50,7 @@ public class ULLMap<Key, Value> implements Map61B<Key, Value>, Iterable<Key> {
                 }
                 iter.next = new Entry(key, val, null);
             } else {
-                front = new Entry(key, val, null);
+                this.front = new Entry(key, val, null);
             }
             size += 1;
         }
@@ -90,9 +90,10 @@ public class ULLMap<Key, Value> implements Map61B<Key, Value>, Iterable<Key> {
         public Entry get(Key k) {
             Entry temp = this;
             while (temp != null) {
-                if (k.equals(this.key)) {
+                if (k != null && k.equals(this.key)) {
                     return this;
                 }
+                temp = temp.next;
             }
             return null;
         }
