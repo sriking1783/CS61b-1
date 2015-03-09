@@ -1,4 +1,5 @@
 package ngordnet;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Collection;
@@ -10,6 +11,7 @@ public class YearlyRecord {
     private TreeMap<String, Integer> wordRanks;
     private TreeMap<String, Integer> ranks;
     private boolean cached = true;
+    private int accountForMultiple = 0;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
@@ -36,25 +38,32 @@ public class YearlyRecord {
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
         record.put(word, count);
-        wordRanks.put(word, count);
+        if (wordRanks.values().contains(count + accountForMultiple)) {
+            accountForMultiple += 1;
+        }
+        wordRanks.put(word, count + accountForMultiple);
+        // wordRanks.put(word, count);
         cached = false;
     }
 
     private void updateRanks() {
-        TreeMap<Integer, String> rankFirst = invert(record);
+        // TreeMap<Integer, String> rankFirst = invert(record);
+        TreeMap<Integer, String> rankFirst = invert(wordRanks);
         TreeMap<Integer, String> actualRanks = new TreeMap<Integer, String>();
         Integer i = 1;
         for (Integer count : rankFirst.keySet()) {
             actualRanks.put(i, rankFirst.get(count));
             i = i + 1;
+            // System.out.println(actualRanks.size());
         }
         ranks = invert(actualRanks);
         cached = true;
     }
 
     /** Inverts the tree and also places all of the elements in the reverse
-      * of the natural order of elements */
-    private <V, K> TreeMap<V, K> invert(TreeMap<K, V> m) {
+      * of the natural order of elements
+      * (Note: Taken from my homework #5) */
+    private <V, K> TreeMap<V, K> invert(Map<K, V> m) {
         TreeMap<V, K> returnMap = new TreeMap<V, K>(Collections.reverseOrder());
         for (K key : m.keySet()) {
             if (!returnMap.containsKey(m.get(key))) {
