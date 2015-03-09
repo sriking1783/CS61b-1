@@ -48,54 +48,7 @@ public class YearlyRecord {
 
     /** Updates the rankings after put has been called. */
     private void updateRanks() {
-        // ArrayList<String> words = new ArrayList<String>(record.keySet());
-
         
-
-        // Can't use triple for loop
-
-        // ArrayList<String> ranked = new ArrayList<String>(ranks.keySet());
-        // for (String word : record.keySet()) {
-        //     int currentCount = record.get(word);
-        //     if (!ranked.contains(word)) {
-        //         for (Integer i : record.values()) {
-        //             if (i < currentCount) {
-        //                 ranked.add(i, word);
-        //             }
-        //         }
-        //     }
-        // }
-
-
-        // ArrayList<String> words = new ArrayList<String>(record.keySet());
-        // for (String s : words) {
-        //     if (record.get(s) > )
-        // }
-
-        // ArrayList<String> words = new ArrayList<String>(record.keySet());
-        // ArrayList<String> sortedWords = new ArrayList<String>();
-        // for (String s : words) {
-        //     for (Integer i : record.values()) {
-        //         if (record.get(s) > i) {
-        //             sortedWords.add(i, s);
-        //         }
-        //     }
-        // }
-        // String pastCount = words.get(0);
-        // // Collection<Number> = this.counts();
-
-        // for (String eachWord : words) {
-        //     Integer currentCount = record.get(eachWord);
-        //     for (Integer i : record.values()) {
-        //         if (currentCount > i) {
-
-        //         }
-        //     }
-        //     Integer currentCount = record.get(eachWord);
-        //     if ()
-        //     Integer currentRank = ranks.get(eachWord);
-        // }
-
         Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
         List<Map.Entry<String, Integer>> rankEntries
             = new ArrayList<Map.Entry<String, Integer>>(mapEntries);
@@ -121,48 +74,6 @@ public class YearlyRecord {
             x += 1;
         }
 
-        // for (Integer i : record.)
-
-        // // Collection<Integer> x = record.values();
-        // ArrayList<Integer> orderedCounts = new ArrayList<Integer>();
-        // orderedCounts.addAll(record.values());
-        // Collections.reverse(Collections.sort(orderedCounts));
-        // int x = 1;
-        // int addedCount = 0;
-        // for (int i = 0; i < orderedCounts.size(); i++) {
-        //     int current = orderedCounts.get(i);
-        //     if ()
-        //     if (orderedCounts.contains)
-
-        //     x += 1;
-        //     // if (orderedCounts.contains(i)) {
-        //     //     // addedCount += 1;
-        //     //     for (int j = i; j < record.values().size(); j++) {
-
-        //     //     }
-        //     // }
-        //     // ranks.put()
-        //     // x += 1;
-        // }
-
-        // ArrayList<Integer> counts = new ArrayList<Integer>();
-        // int addedCount = 0;
-        // for (Integer i : record.values()) {
-        //     if (counts.contains(i)) {
-        //         addedCount += 1;
-        //     }
-        //     counts.add(i + addedCount);
-        // }
-
-
-        // TreeMap<Integer, String> rankFirst = invert(record);
-        // TreeMap<Integer, String> actualRanks = new TreeMap<Integer, String>();
-        // Integer i = 1;
-        // for (Integer count : rankFirst.keySet()) {
-        //     actualRanks.put(i, rankFirst.get(count));
-        //     i = i + 1;
-        // }
-        // ranks = invert(actualRanks);
         cached = true;
     }
 
