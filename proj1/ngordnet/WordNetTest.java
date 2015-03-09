@@ -4,15 +4,13 @@ import static org.junit.Assert.*;
 
 public class WordNetTest {
 
-    // @Test
-    // public void testHyponym() {
-    //     GenericList<Integer> a = new GenericList<Integer>();
-    //     a.insert(10);
-    //     assertEquals(10, (int) a.get(0));
-    //     a.insert(29);
-    //     assertEquals(29, (int) a.get(0));
-    //     assertEquals(10, (int) a.get(1));
-    // }
+    @Test
+    public void testIsNoun() {
+        WordNet wn = new WordNet("./wordnet/synsets14.txt", "./wordnet/hyponyms14.txt");
+        System.out.println(wn.isNoun("jump"));
+        System.out.println(wn.isNoun("leap"));
+        System.out.println(wn.isNoun("nasal_decongestant"));
+    }
 
     // @Test
     // public void testLength() {
