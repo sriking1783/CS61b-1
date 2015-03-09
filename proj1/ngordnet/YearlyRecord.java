@@ -46,12 +46,56 @@ public class YearlyRecord {
         cached = false;
     }
 
-    /** Updates the rankings after put has been called.
-      * Decided ot hse the Map.Entry<String, Integer> idea after looking
-      * through documentation for the TreeMap class. This looked to be
-      * the only way that I could think of of implementing this method
-      * Got the main idea from looking over hw5 again. */
+    /** Updates the rankings after put has been called. */
     private void updateRanks() {
+        // ArrayList<String> words = new ArrayList<String>(record.keySet());
+
+        
+
+        // Can't use triple for loop
+
+        // ArrayList<String> ranked = new ArrayList<String>(ranks.keySet());
+        // for (String word : record.keySet()) {
+        //     int currentCount = record.get(word);
+        //     if (!ranked.contains(word)) {
+        //         for (Integer i : record.values()) {
+        //             if (i < currentCount) {
+        //                 ranked.add(i, word);
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        // ArrayList<String> words = new ArrayList<String>(record.keySet());
+        // for (String s : words) {
+        //     if (record.get(s) > )
+        // }
+
+        // ArrayList<String> words = new ArrayList<String>(record.keySet());
+        // ArrayList<String> sortedWords = new ArrayList<String>();
+        // for (String s : words) {
+        //     for (Integer i : record.values()) {
+        //         if (record.get(s) > i) {
+        //             sortedWords.add(i, s);
+        //         }
+        //     }
+        // }
+        // String pastCount = words.get(0);
+        // // Collection<Number> = this.counts();
+
+        // for (String eachWord : words) {
+        //     Integer currentCount = record.get(eachWord);
+        //     for (Integer i : record.values()) {
+        //         if (currentCount > i) {
+
+        //         }
+        //     }
+        //     Integer currentCount = record.get(eachWord);
+        //     if ()
+        //     Integer currentRank = ranks.get(eachWord);
+        // }
+
         Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
         List<Map.Entry<String, Integer>> rankEntries
             = new ArrayList<Map.Entry<String, Integer>>(mapEntries);
@@ -119,7 +163,7 @@ public class YearlyRecord {
         //     i = i + 1;
         // }
         // ranks = invert(actualRanks);
-        // cached = true;
+        cached = true;
     }
 
     /** Inverts the tree and also places all of the elements in the reverse
