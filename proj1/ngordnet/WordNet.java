@@ -40,7 +40,7 @@ public class WordNet {
         }
     }
 
-    private void splitAndAdd (String x) {
+    private void splitAndAdd(String x) {
         String[] parts = x.split(",");
         // Second element is always the list of strings seperated by spaces
         String[] nouns = parts[1].split(" ");

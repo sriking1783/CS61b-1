@@ -2,38 +2,66 @@ package ngordnet;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Collection;
+import java.util.Collections;
 
 public class YearlyRecord {
     
     private TreeMap<String, Integer> record;
+    private TreeMap<String, Integer> wordRanks;
+    private TreeMap<String, Integer> ranks;
+    private boolean cached = true;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
         record = new TreeMap<String, Integer>();
+        wordRanks = new TreeMap<String, Integer>();
+        ranks = new TreeMap<String, Integer>();
     }
 
     /** Creates a YearlyRecord using the given data. */
     public YearlyRecord(HashMap<String, Integer> otherCountMap) {
         record = new TreeMap<String, Integer>();
+        wordRanks = new TreeMap<String, Integer>();
+        ranks = new TreeMap<String, Integer>();
         for (String x : otherCountMap.keySet()) {
-            record.put(x, otherCountMap.get(x));
+            this.put(x, otherCountMap.get(x));
         }
     }
 
     /** Returns the number of times WORD appeared in this year. */
     public int count(String word) {
-        int count = 0;
-        for (String s : record.keySet()) {
-            if (s.equals(word)) {
-                count += record.get(s);
-            }
-        }
-        return count;
+        return record.get(word);
     }
 
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
         record.put(word, count);
+        wordRanks.put(word, count);
+        cached = false;
+    }
+
+    private void updateRanks() {
+        TreeMap<Integer, String> rankFirst = invert(record);
+        TreeMap<Integer, String> actualRanks = new TreeMap<Integer, String>();
+        Integer i = 1;
+        for (Integer count : rankFirst.keySet()) {
+            actualRanks.put(i, rankFirst.get(count));
+            i = i + 1;
+        }
+        ranks = invert(actualRanks);
+        cached = true;
+    }
+
+    /** Inverts the tree and also places all of the elements in the reverse
+      * of the natural order of elements */
+    private <V, K> TreeMap<V, K> invert(TreeMap<K, V> m) {
+        TreeMap<V, K> returnMap = new TreeMap<V, K>(Collections.reverseOrder());
+        for (K key : m.keySet()) {
+            if (!returnMap.containsKey(m.get(key))) {
+                returnMap.put(m.get(key), key);
+            }
+        }
+        return returnMap;
     }
 
     /** Returns the number of words recorded this year. */
@@ -43,13 +71,22 @@ public class YearlyRecord {
 
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
-        // Collection<String> ascendingWords = record.navigableKeySet();
-        return null;
+        TreeMap<Integer, String> ascending = new TreeMap<Integer, String>();
+        for (String s : record.keySet()) {
+            ascending.put(record.get(s), s);
+        }
+        Collection<String> sortedWords = ascending.values();
+        return sortedWords;
     }
 
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() {
-        return null;
+        TreeMap<Integer, Number> ascendingCount = new TreeMap<Integer, Number>();
+        for (Integer i : record.values()) {
+            ascendingCount.put(i, i);
+        }
+        Collection<Number> sorted = ascendingCount.values();
+        return sorted;
     }
 
     /** Returns rank of WORD. Most common word is rank 1. 
@@ -57,6 +94,9 @@ public class YearlyRecord {
       * No two words should have the same rank.
       */
     public int rank(String word) {
-        return 0;
+        if (!cached) {
+            this.updateRanks();
+        }
+        return ranks.get(word);
     }
-} 
+}
