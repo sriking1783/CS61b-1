@@ -13,21 +13,18 @@ import java.util.Collections;
 public class YearlyRecord {
     
     private TreeMap<String, Integer> record;
-    // private TreeMap<String, Integer> wordRanks;
     private TreeMap<String, Integer> ranks;
     private boolean cached = true;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
         record = new TreeMap<String, Integer>();
-        // wordRanks = new TreeMap<String, Integer>();
         ranks = new TreeMap<String, Integer>();
     }
 
     /** Creates a YearlyRecord using the given data. */
     public YearlyRecord(HashMap<String, Integer> otherCountMap) {
         record = new TreeMap<String, Integer>();
-        // wordRanks = new TreeMap<String, Integer>();
         ranks = new TreeMap<String, Integer>();
         for (String x : otherCountMap.keySet()) {
             this.put(x, otherCountMap.get(x));
@@ -42,19 +39,22 @@ public class YearlyRecord {
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
         record.put(word, count);
-        // wordRanks.put(word, count);
         cached = false;
     }
 
-    /** Updates the rankings after put has been called. */
+    /** Updates the rankings after put has been called.
+      * I decided to use the comparators after trying many different strategies
+      * for finding / sorting the ranks. I took a lot of the ideas from my hw5,
+      * but figured out the strategy when I looked into the entrySet method of 
+      * the treemap class. */
     private void updateRanks() {
         
         Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
         List<Map.Entry<String, Integer>> rankEntries
             = new ArrayList<Map.Entry<String, Integer>>(mapEntries);
         // sort them with highest counts first
-
-        // Collections.sort(rankEntries);
+        // I used a comparator object, because I was unable to use the sort
+        // method built-in to the file.  
         Comparator<Map.Entry<String, Integer>> comparor
             = new Comparator<Map.Entry<String, Integer>>() {
                 public int compare(Map.Entry<String, Integer> entry1,
@@ -69,7 +69,6 @@ public class YearlyRecord {
         Iterator<Map.Entry<String, Integer>> listItems = rankEntries.iterator();
         while (listItems.hasNext()) {
             Map.Entry<String, Integer> current = listItems.next();
-            // ranks.put(current.getKey(), current.getValue());
             ranks.put(current.getKey(), x);
             x += 1;
         }
