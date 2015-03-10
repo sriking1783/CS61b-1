@@ -46,7 +46,19 @@ public class YearlyRecord {
       * I decided to use the comparators after trying many different strategies
       * for finding / sorting the ranks. I took a lot of the ideas from my hw5,
       * but figured out the strategy when I looked into the entrySet method of 
-      * the treemap class. */
+      * the treemap class. 
+      *
+      * Note: I also took some level of inspiration for my code from the website
+      * below. However, I did not actually proceed to find this website until
+      * after I had written most of my code for this method. Also, the only part
+      * of the code that I explicitly looked at and manipulated from this website
+      * was the part about creating the Comparator object, because I was unsure of
+      * how to add this without implementing the interface. All of the other code
+      * (including using the iterator object) were written by me after looking over
+      * homework 5 and the lecture slides.
+      *
+      * Citation: http://www.mkyong.com/java/how-to-sort-a-map-in-java/
+      */
     private void updateRanks() {  
         Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
         List<Map.Entry<String, Integer>> rankEntries
