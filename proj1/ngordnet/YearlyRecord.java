@@ -47,8 +47,7 @@ public class YearlyRecord {
       * for finding / sorting the ranks. I took a lot of the ideas from my hw5,
       * but figured out the strategy when I looked into the entrySet method of 
       * the treemap class. */
-    private void updateRanks() {
-        
+    private void updateRanks() {  
         Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
         List<Map.Entry<String, Integer>> rankEntries
             = new ArrayList<Map.Entry<String, Integer>>(mapEntries);
