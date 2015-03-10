@@ -87,19 +87,6 @@ public class YearlyRecord {
         cached = true;
     }
 
-    /** Inverts the tree and also places all of the elements in the reverse
-      * of the natural order of elements
-      * (Note: Taken from my homework #5) */
-    private <V, K> TreeMap<V, K> invert(TreeMap<K, V> m) {
-        TreeMap<V, K> returnMap = new TreeMap<V, K>(Collections.reverseOrder());
-        for (K key : m.keySet()) {
-            if (!returnMap.containsKey(m.get(key))) {
-                returnMap.put(m.get(key), key);
-            }
-        }
-        return returnMap;
-    }
-
     /** Returns the number of words recorded this year. */
     public int size() {
         return record.size();
@@ -107,22 +94,40 @@ public class YearlyRecord {
 
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
-        TreeMap<Integer, String> ascending = new TreeMap<Integer, String>();
-        for (String s : record.keySet()) {
-            ascending.put(record.get(s), s);
+        ArrayList<Integer> ascendingCount = new ArrayList<Integer>(record.values());
+        Collections.sort(ascendingCount);
+        ArrayList<String> ascendingWords = new ArrayList<String>();
+        for (Integer i : ascendingCount) {
+            for (String s : record.keySet()) {
+                if (record.get(s) == i) {
+                    ascendingWords.add(s);
+                }
+            }
         }
-        Collection<String> sortedWords = ascending.values();
-        return sortedWords;
+        return ascendingWords;
+        // TreeMap<Integer, String> ascending = new TreeMap<Integer, String>();
+        // for (String s : record.keySet()) {
+        //     ascending.put(record.get(s), s);
+        // }
+        // Collection<String> sortedWords = ascending.values();
+        // return sortedWords;
     }
 
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() {
-        TreeMap<Integer, Number> ascendingCount = new TreeMap<Integer, Number>();
-        for (Integer i : record.values()) {
-            ascendingCount.put(i, i);
+        ArrayList<Integer> ascendingCount = new ArrayList<Integer>(record.values());
+        Collections.sort(ascendingCount);
+        ArrayList<Number> ascendingNumbers = new ArrayList<Number>();
+        for (Integer i : ascendingCount) {
+            ascendingNumbers.add(i);
         }
-        Collection<Number> sorted = ascendingCount.values();
-        return sorted;
+        return ascendingNumbers;
+        // TreeMap<Integer, Number> ascendingCount = new TreeMap<Integer, Number>();
+        // for (Integer i : record.values()) {
+        //     ascendingCount.put(i, i);
+        // }
+        // Collection<Number> sorted = ascendingCount.values();
+        // return sorted;
     }
 
     /** Returns rank of WORD. Most common word is rank 1. 
