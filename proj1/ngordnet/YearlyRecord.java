@@ -105,12 +105,6 @@ public class YearlyRecord {
             }
         }
         return ascendingWords;
-        // TreeMap<Integer, String> ascending = new TreeMap<Integer, String>();
-        // for (String s : record.keySet()) {
-        //     ascending.put(record.get(s), s);
-        // }
-        // Collection<String> sortedWords = ascending.values();
-        // return sortedWords;
     }
 
     /** Returns all counts in ascending order of count. */
@@ -122,12 +116,6 @@ public class YearlyRecord {
             ascendingNumbers.add(i);
         }
         return ascendingNumbers;
-        // TreeMap<Integer, Number> ascendingCount = new TreeMap<Integer, Number>();
-        // for (Integer i : record.values()) {
-        //     ascendingCount.put(i, i);
-        // }
-        // Collection<Number> sorted = ascendingCount.values();
-        // return sorted;
     }
 
     /** Returns rank of WORD. Most common word is rank 1. 
