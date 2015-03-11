@@ -12,8 +12,8 @@ public class Plotter {
     /** Creates a plot of the TimeSeries TS. Labels the graph with the
       * given TITLE, XLABEL, YLABEL, and LEGEND. */
 
-    private static final WIDTH = 800;
-    private static final HEIGHT = 600;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
 
 
     public static void plotTS(TimeSeries<? extends Number> ts, String title, 
