@@ -63,9 +63,9 @@ public class NGramMap {
       * did not appear in the given year, return 0. */
     public int countInYear(String word, int year) {
         if (wordsTimeMap.containsKey(word)) {
-            if (wordsTimeMap.get(word).containsKey(year)) {
+            // if (wordsTimeMap.get(word).containsKey(year)) {
                 return wordsTimeMap.get(word).get(year);
-            }
+            // }
         }
         return 0;
     }
