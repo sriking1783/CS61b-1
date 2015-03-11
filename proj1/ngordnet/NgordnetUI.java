@@ -1,9 +1,4 @@
 package ngordnet;
-import edu.princeton.cs.introcs.StdIn;
-import edu.princeton.cs.introcs.In;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
 
 /** Provides a simple user interface for exploring WordNet and NGram data.
  *  @author Aditya Iyengar
@@ -18,8 +13,8 @@ public class NgordnetUI {
         String synsetFile = in.readString();
         String hyponymFile = in.readString();
         System.out.println("\nBased on ngordnetui.config, using the following: "
-                           + wordFile + ", " + countFile + ", " + synsetFile +
-                           ", and " + hyponymFile + ".");
+                           + wordFile + ", " + countFile + ", " + synsetFile
+                           + ", and " + hyponymFile + ".");
 
         NGramMap mapNGram = new NGramMap(wordFile, countFile);
         WordNet mapWordNet = new WordNet(synsetFile, hyponymFile);
@@ -34,7 +29,16 @@ public class NgordnetUI {
             String[] remainingElements = new String[words.length - 1];
             System.arraycopy(words, 1, remainingElements, 0, words.length - 1);
             try {
-                switch(initCommand) {
+                special(initCommand);
+            } catch (IllegalArgumentException | IndexOutOfBoundsException
+                    | NullPointerException e) {
+                System.out.println(e + ": Please input a proper item.");
+            }
+        }
+    }
+
+    private void special(String initCommand) {
+        switch (initCommand) {
                     case "quit":
                         return;
                     case "help":
@@ -87,10 +91,5 @@ public class NgordnetUI {
                     default:
                         System.out.println("That is an invalid command.");
                         break;
-                }
-            } catch (RuntimeException e) {
-                System.out.println("Invalid argument: Please input a proper item.");
-            }
-        }
     }
 } 
