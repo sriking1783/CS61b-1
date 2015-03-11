@@ -63,9 +63,9 @@ public class NGramMap {
       * did not appear in the given year, return 0. */
     public int countInYear(String word, int year) {
         if (wordsTimeMap.containsKey(word)) {
-            if (wordsTimeMap.get(word).containsKey(year)) {
-                return wordsTimeMap.get(word).get(year);
-            }
+            // if (wordsTimeMap.get(word).containsKey(year)) {
+            return wordsTimeMap.get(word).get(year);
+            // }
         }
         return 0;
     }
@@ -130,13 +130,13 @@ public class NGramMap {
 
     /** Provides processed history of all words between STARTYEAR and ENDYEAR as processed
       * by YRP. */
-    // public TimeSeries<Double> processedHistory(int startYear, int endYear,
-    //                                            YearlyRecordProcessor yrp) {
-    // return null;
-    // }
+    public TimeSeries<Double> processedHistory(int startYear, int endYear,
+                                               YearlyRecordProcessor yrp) {
+        return null;
+    }
 
-    // /** Provides processed history of all words ever as processed by YRP. */
-    // public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) {
-    // return null;
-    // }
+    /** Provides processed history of all words ever as processed by YRP. */
+    public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) {
+        return null;
+    }
 }
