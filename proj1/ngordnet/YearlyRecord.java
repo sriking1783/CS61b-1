@@ -14,6 +14,10 @@ public class YearlyRecord {
     
     private TreeMap<String, Integer> record;
     private TreeMap<String, Integer> ranks;
+    /** Holds the words sorted by the counts (for words) */
+    private ArrayList<String> sortedWords = new ArrayList<String>();
+    /** Holds the counts sorted by the counts (for counts) */
+    private ArrayList<Integer> sortedCounts = new ArrayList<Integer>();
     private boolean cached = true;
 
     /** Creates a new empty YearlyRecord. */
@@ -40,6 +44,8 @@ public class YearlyRecord {
     public void put(String word, int count) {
         record.put(word, count);
         cached = false;
+        // record.put(word, count);
+        // cached = false;
     }
 
     /** Updates the rankings after put has been called.
@@ -59,7 +65,32 @@ public class YearlyRecord {
       *
       * Citation: http://www.mkyong.com/java/how-to-sort-a-map-in-java/
       */
-    private void updateRanks() {  
+    private void updateRanks() {
+        // Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
+        // List<Map.Entry<String, Integer>> rankEntries
+        //     = new ArrayList<Map.Entry<String, Integer>>(mapEntries);
+        // // sort them with highest counts first
+        // // I used a comparator object, because I was unable to use the sort
+        // // method built-in to the file.  
+        // Comparator<Map.Entry<String, Integer>> comparor
+        //     = new Comparator<Map.Entry<String, Integer>>() {
+        //         public int compare(Map.Entry<String, Integer> entry1,
+        //                             Map.Entry<String, Integer> entry2) {
+        //             return (entry1.getValue().compareTo(entry2.getValue()));
+        //         }
+        //     };
+        // Collections.sort(rankEntries, comparor);
+        // Collections.reverse(rankEntries);
+        // ranks = new TreeMap<String, Integer>();
+        // int x = 1;
+        // Iterator<Map.Entry<String, Integer>> listItems = rankEntries.iterator();
+        // while (listItems.hasNext()) {
+        //     Map.Entry<String, Integer> current = listItems.next();
+        //     ranks.put(current.getKey(), x);
+        //     x += 1;
+        // }
+        // cached = true;
+
         Set<Map.Entry<String, Integer>> mapEntries = record.entrySet();
         List<Map.Entry<String, Integer>> rankEntries
             = new ArrayList<Map.Entry<String, Integer>>(mapEntries);
@@ -75,6 +106,37 @@ public class YearlyRecord {
             };
         Collections.sort(rankEntries, comparor);
         Collections.reverse(rankEntries);
+
+        // sortedCounts = new ArrayList<Integer>();
+        // sortedWords = new ArrayList<String>();
+        
+        // Sorts the counts in ascending order
+        // Collections.sort(sortedCounts);
+        // sortedWords = new ArrayList<String>();
+        // for (Integer i : sortedCounts) {
+        //     System.out.println(i);
+        //     for (String s : record.keySet()) {
+        //         System.out.println(record.get(s));
+        //         if (record.get(s) == i) {
+        //             System.out.println(s);
+        //             sortedWords.add(s);
+        //             break;
+        //         }
+        //     }
+        // }
+
+        // Rewrote code from my original words() to improve efficiency 
+        sortedCounts = new ArrayList<Integer>(record.values());
+        Collections.sort(sortedCounts);
+        sortedWords = new ArrayList<String>();
+        for (Integer i : sortedCounts) {
+            for (String s : record.keySet()) {
+                if (record.get(s) == i) {
+                    sortedWords.add(s);
+                }
+            }
+        }
+
         ranks = new TreeMap<String, Integer>();
         int x = 1;
         Iterator<Map.Entry<String, Integer>> listItems = rankEntries.iterator();
@@ -83,7 +145,6 @@ public class YearlyRecord {
             ranks.put(current.getKey(), x);
             x += 1;
         }
-
         cached = true;
     }
 
@@ -94,28 +155,31 @@ public class YearlyRecord {
 
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
-        ArrayList<Integer> ascendingCount = new ArrayList<Integer>(record.values());
-        Collections.sort(ascendingCount);
-        ArrayList<String> ascendingWords = new ArrayList<String>();
-        for (Integer i : ascendingCount) {
-            for (String s : record.keySet()) {
-                if (record.get(s) == i) {
-                    ascendingWords.add(s);
-                }
-            }
-        }
-        return ascendingWords;
+        // ArrayList<Integer> ascendingCount = new ArrayList<Integer>(record.values());
+        // Collections.sort(ascendingCount);
+        // ArrayList<String> ascendingWords = new ArrayList<String>();
+        // for (Integer i : ascendingCount) {
+        //     for (String s : record.keySet()) {
+        //         if (record.get(s) == i) {
+        //             ascendingWords.add(s);
+        //         }
+        //     }
+        // }
+        // return ascendingWords;
+        return sortedWords;
     }
 
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() {
-        ArrayList<Integer> ascendingCount = new ArrayList<Integer>(record.values());
-        Collections.sort(ascendingCount);
-        ArrayList<Number> ascendingNumbers = new ArrayList<Number>();
-        for (Integer i : ascendingCount) {
-            ascendingNumbers.add(i);
-        }
-        return ascendingNumbers;
+        // ArrayList<Integer> ascendingCount = new ArrayList<Integer>(record.values());
+        // Collections.sort(ascendingCount);
+        // ArrayList<Number> ascendingNumbers = new ArrayList<Number>();
+        // for (Integer i : ascendingCount) {
+        //     ascendingNumbers.add(i);
+        // }
+        // return ascendingNumbers;
+        ArrayList<Number> sorts = new ArrayList<Number>(sortedCounts);
+        return sorts;
     }
 
     /** Returns rank of WORD. Most common word is rank 1. 

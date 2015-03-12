@@ -3,7 +3,6 @@ package ngordnet;
 import edu.princeton.cs.introcs.In;
 import edu.princeton.cs.introcs.StdIn;
 import java.util.Set;
-import java.util.ArrayList;
 
 /** Provides a simple user interface for exploring WordNet and NGram data.
  *  @author Aditya Iyengar
@@ -80,7 +79,7 @@ public class NgordnetUI {
                     default:
                         System.out.println("That is an invalid command.");
                         break;
-                    }
+                }
             } catch (RuntimeException e) {
                 System.out.println(e + ": Please input a proper item.");
             }
