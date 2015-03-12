@@ -122,8 +122,8 @@ public class YearlyRecord {
                 }
             }
         }
-        System.out.println(sortedCounts);
-        System.out.println(sortedWords);
+        // System.out.println(sortedCounts);
+        // System.out.println(sortedWords);
 
         // sortedCounts = new ArrayList<Integer>();
         // sortedWords = new ArrayList<String>();
