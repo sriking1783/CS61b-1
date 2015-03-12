@@ -70,7 +70,7 @@ public class NgordnetUI {
                         break;
                     case "wordlength":
                         YearlyRecordProcessor yrp = new WordLengthProcessor();
-                        Plotter.plotProcessedHistory(mapNGram, startingYear, endingYear,yrp);
+                        Plotter.plotProcessedHistory(mapNGram, startingYear, endingYear, yrp);
                         break;
                     case "zipf":
                         Integer theYear = Integer.parseInt(remainingElements[0]);
