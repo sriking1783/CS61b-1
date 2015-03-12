@@ -86,7 +86,7 @@ public class YearlyRecordTimeTest {
         int numWordsToPut = 1;
         int numRankCallsTinyYR = countRankCalls(numWordsToPut, maxTimeInSeconds);
 
-        numWordsToPut = 100;
+        numWordsToPut = 1000000000;
         int numRankCallsLargerYR = countRankCalls(numWordsToPut, maxTimeInSeconds);
     
         double ratio = ((double) numRankCallsTinyYR / (double) numRankCallsLargerYR);
