@@ -63,16 +63,19 @@ public class NGramMap {
       * did not appear in the given year, return 0. */
     public int countInYear(String word, int year) {
         if (wordsTimeMap.containsKey(word)) {
-            // if (wordsTimeMap.get(word).containsKey(year)) {
             return wordsTimeMap.get(word).get(year);
-            // }
         }
         return 0;
     }
 
     /** Returns a defensive copy of the YearlyRecord of WORD. */
     public YearlyRecord getRecord(int year) {
-        return wordsByYearMap.get(year);
+        YearlyRecord wordsInYear = new YearlyRecord();
+        YearlyRecord current = wordsByYearMap.get(year);
+        for (String word : current.words()) {
+            wordsInYear.put(word, current.count(word));
+        }
+        return wordsInYear;
     }
 
     /** Returns the total number of words recorded in all volumes. */
@@ -89,7 +92,8 @@ public class NGramMap {
 
     /** Provides a defensive copy of the history of WORD. */
     public TimeSeries<Integer> countHistory(String word) {
-        return wordsTimeMap.get(word);
+        TimeSeries<Integer> countOfHistory = new TimeSeries<Integer>(wordsTimeMap.get(word));
+        return countOfHistory;
     }
 
     /** Provides the relative frequency of WORD between STARTYEAR and ENDYEAR. */
@@ -112,9 +116,11 @@ public class NGramMap {
       * STARTYEAR and ENDYEAR. */
     public TimeSeries<Double> summedWeightHistory(Collection<String> words, 
                               int startYear, int endYear) {
-        TimeSeries<Double> summedFrequency = new  TimeSeries<Double>();
+        TimeSeries<Double> summedFrequency = new TimeSeries<Double>();
+
         for (String word : words) {
-            summedFrequency = summedFrequency.plus(weightHistory(word, startYear, endYear));
+            TimeSeries<Double> x = weightHistory(word, startYear, endYear);
+            summedFrequency = summedFrequency.plus(x);
         }
         return summedFrequency;
     }
@@ -132,11 +138,21 @@ public class NGramMap {
       * by YRP. */
     public TimeSeries<Double> processedHistory(int startYear, int endYear,
                                                YearlyRecordProcessor yrp) {
-        return null;
+        TimeSeries<Double> processedHistory = new TimeSeries<Double>();
+        for (Integer year : wordsByYearMap.keySet()) {
+            if (year >= startYear && year <= endYear) {
+                processedHistory.put(year, yrp.process(wordsByYearMap.get(year)));
+            }
+        }
+        return processedHistory;
     }
 
     /** Provides processed history of all words ever as processed by YRP. */
     public TimeSeries<Double> processedHistory(YearlyRecordProcessor yrp) {
-        return null;
+        TimeSeries<Double> processedHistory = new TimeSeries<Double>();
+        for (Integer number : wordsByYearMap.keySet()) {
+            processedHistory.put(number, yrp.process(wordsByYearMap.get(number)));
+        }
+        return processedHistory;
     }
 }
