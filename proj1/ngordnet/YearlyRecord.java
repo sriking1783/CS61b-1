@@ -19,7 +19,7 @@ public class YearlyRecord {
     /** Holds the counts sorted by the counts (for counts) */
     private ArrayList<Integer> sortedCounts = new ArrayList<Integer>();
     private boolean cached = true;
-    private boolean countsRank = true;
+    private boolean needPut = false;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
@@ -47,7 +47,7 @@ public class YearlyRecord {
         sortedCounts.add(count);
         sortedWords.add(word);
         cached = false;
-        countsRank = false;
+        needPut = true;
     }
 
     /** Updates the rankings after put has been called.
@@ -95,8 +95,8 @@ public class YearlyRecord {
         cached = true;
     }
 
+    /** Rewrote code from my original words() to improve efficiency */
     private void updateCount() {
-        // Rewrote code from my original words() to improve efficiency
         sortedCounts = new ArrayList<Integer>(record.values());
         Collections.sort(sortedCounts);
         sortedWords = new ArrayList<String>();
@@ -107,7 +107,7 @@ public class YearlyRecord {
                 }
             }
         }
-        countsRank = true;
+        needPut = false;
     }
 
 
@@ -118,7 +118,7 @@ public class YearlyRecord {
 
     /** Returns all words in ascending order of count. */
     public Collection<String> words() {
-        if (!countsRank) {
+        if (needPut) {
             updateCount();
         }
         return sortedWords;
@@ -126,7 +126,7 @@ public class YearlyRecord {
 
     /** Returns all counts in ascending order of count. */
     public Collection<Number> counts() {
-        if (!countsRank) {
+        if (needPut) {
             updateCount();
         }
         ArrayList<Number> sorts = new ArrayList<Number>(sortedCounts);
