@@ -19,6 +19,7 @@ public class YearlyRecord {
     /** Holds the counts sorted by the counts (for counts) */
     private ArrayList<Integer> sortedCounts = new ArrayList<Integer>();
     private boolean cached = true;
+    // private boolean countsRank = true;
 
     /** Creates a new empty YearlyRecord. */
     public YearlyRecord() {
@@ -43,7 +44,10 @@ public class YearlyRecord {
     /** Records that WORD occurred COUNT times in this year. */
     public void put(String word, int count) {
         record.put(word, count);
+        sortedCounts.add(count);
+        sortedWords.add(word);
         cached = false;
+        // countsRank = false;
         // record.put(word, count);
         // cached = false;
     }
@@ -107,6 +111,18 @@ public class YearlyRecord {
         Collections.sort(rankEntries, comparor);
         Collections.reverse(rankEntries);
 
+        // Rewrote code from my original words() to improve efficiency
+        sortedCounts = new ArrayList<Integer>(record.values());
+        Collections.sort(sortedCounts);
+        sortedWords = new ArrayList<String>();
+        for (Integer i : sortedCounts) {
+            for (String s : record.keySet()) {
+                if (record.get(s) == i) {
+                    sortedWords.add(s);
+                }
+            }
+        }
+
         // sortedCounts = new ArrayList<Integer>();
         // sortedWords = new ArrayList<String>();
         
@@ -125,18 +141,6 @@ public class YearlyRecord {
         //     }
         // }
 
-        // Rewrote code from my original words() to improve efficiency 
-        sortedCounts = new ArrayList<Integer>(record.values());
-        Collections.sort(sortedCounts);
-        sortedWords = new ArrayList<String>();
-        for (Integer i : sortedCounts) {
-            for (String s : record.keySet()) {
-                if (record.get(s) == i) {
-                    sortedWords.add(s);
-                }
-            }
-        }
-
         ranks = new TreeMap<String, Integer>();
         int x = 1;
         Iterator<Map.Entry<String, Integer>> listItems = rankEntries.iterator();
@@ -147,6 +151,7 @@ public class YearlyRecord {
         }
         cached = true;
     }
+
 
     /** Returns the number of words recorded this year. */
     public int size() {
