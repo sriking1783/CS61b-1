@@ -1,5 +1,10 @@
 package ngordnet;
 
+import edu.princeton.cs.introcs.In;
+import edu.princeton.cs.introcs.StdIn;
+import java.util.Set;
+import java.util.ArrayList;
+
 /** Provides a simple user interface for exploring WordNet and NGram data.
  *  @author Aditya Iyengar
  */
@@ -29,16 +34,7 @@ public class NgordnetUI {
             String[] remainingElements = new String[words.length - 1];
             System.arraycopy(words, 1, remainingElements, 0, words.length - 1);
             try {
-                special(initCommand);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException
-                    | NullPointerException e) {
-                System.out.println(e + ": Please input a proper item.");
-            }
-        }
-    }
-
-    private void special(String initCommand) {
-        switch (initCommand) {
+                switch (initCommand) {
                     case "quit":
                         return;
                     case "help":
@@ -70,26 +66,24 @@ public class NgordnetUI {
                         Plotter.plotAllWords(mapNGram, allWords, startingYear, endingYear);
                         break;
                     case "hypohist":
-                        ArrayList<String> wordsWithHypos = new ArrayList<String>();
-                        for (String indivWord : remainingElements) {
-                            for (String hypos : mapWordNet.hyponyms(indivWord)) {
-                                wordsWithHypos.add(hypos);
-                            }
-                        }
-                        String[] allSubWords = new String[wordsWithHypos.size()];
-                        int x = 0;
-                        for (String theWord : wordsWithHypos) {
-                            allSubWords[x] = theWord;
-                            x += 1;
-                        }
-                        if (allSubWords.length != 0) {
-                            Plotter.plotAllWords(mapNGram, allSubWords, startingYear, endingYear);
-                        } else {
-                            System.out.println("Error: Given word does not have a hyponym set.");
-                        }
+                        Plotter.plotCategoryWeights(mapNGram, mapWordNet, remainingElements,
+                                                    startingYear, endingYear);
+                        break;
+                    case "wordlength":
+                        YearlyRecordProcessor yrp = new WordLengthProcessor();
+                        Plotter.plotProcessedHistory(mapNGram, startingYear, endingYear,yrp);
+                        break;
+                    case "zipf":
+                        Integer theYear = Integer.parseInt(remainingElements[0]);
+                        Plotter.plotZipfsLaw(mapNGram, theYear);
                         break;
                     default:
                         System.out.println("That is an invalid command.");
                         break;
+                    }
+            } catch (RuntimeException e) {
+                System.out.println(e + ": Please input a proper item.");
+            }
+        }
     }
-} 
+}
