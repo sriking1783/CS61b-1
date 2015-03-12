@@ -12,8 +12,8 @@ public class Plotter {
     /** Creates a plot of the TimeSeries TS. Labels the graph with the
       * given TITLE, XLABEL, YLABEL, and LEGEND. */
 
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WD = 800;
+    private static final int HT = 600;
 
 
     public static void plotTS(TimeSeries<? extends Number> ts, String title, 
@@ -49,7 +49,7 @@ public class Plotter {
     public static void plotProcessedHistory(NGramMap ngm, int startYear, int endYear,
                                             YearlyRecordProcessor yrp) {
         TimeSeries<Double> wordWeights = ngm.processedHistory(startYear, endYear, yrp);
-        plotTS(wordWeights, "Word Length", "year", "avg. length", "word length");
+        plotTS(wordWeights, "Word Length", "avg. length", "year", "word length");
     }
 
     /** Creates a plot of the total normalized count of WN.hyponyms(CATEGORYLABEL)
@@ -57,7 +57,8 @@ public class Plotter {
     public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String categoryLabel,
                                             int startYear, int endYear) {
         Set<String> allWords = wn.hyponyms(categoryLabel);        
-        TimeSeries<Double> sumOfWeightedHistory = ngm.summedWeightHistory(allWords, startYear, endYear);
+        TimeSeries<Double> sumOfWeightedHistory = ngm.summedWeightHistory(allWords,
+                                                                startYear, endYear);
         plotTS(sumOfWeightedHistory, "Popularity", "year", "weight", categoryLabel);
     }
 
@@ -65,25 +66,27 @@ public class Plotter {
       * from STARTYEAR to ENDYEAR using NGM and WN as data sources. */
     public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String[] categoryLabels,
                                             int startYear, int endYear) {
-        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).xAxisTitle("years").yAxisTitle("data").build();
+        Chart c;
+        c = new ChartBuilder().width(WD).height(HT).xAxisTitle("years").yAxisTitle("data").build();
         for (String category : categoryLabels) {
             Set<String> words = wn.hyponyms(category);
             TimeSeries<Double> group = ngm.summedWeightHistory(words, startYear, endYear);
-            chart.addSeries(category, group.years(), group.data());
+            c.addSeries(category, group.years(), group.data());
         }
-        new SwingWrapper(chart).displayChart();
+        new SwingWrapper(c).displayChart();
     }
 
     /** Makes a plot showing overlaid individual normalized count for every word in WORDS
       * from STARTYEAR to ENDYEAR using NGM as a data source. */
     public static void plotAllWords(NGramMap ngm, String[] words, int startYear, int endYear) {
-        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).xAxisTitle("years").yAxisTitle("data").build();
+        Chart c;
+        c = new ChartBuilder().width(WD).height(HT).xAxisTitle("years").yAxisTitle("data").build();
 
         for (String word : words) {
             TimeSeries<Double> group = ngm.weightHistory(word, startYear, endYear);
-            chart.addSeries(word, group.years(), group.data());
+            c.addSeries(word, group.years(), group.data());
         }
-        new SwingWrapper(chart).displayChart();
+        new SwingWrapper(c).displayChart();
     }
 
     /** Returns the numbers from max to 1, inclusive in decreasing order. 
@@ -103,11 +106,12 @@ public class Plotter {
         Collection<Number> counts = yr.counts();
         Collection<Number> ranks = downRange(counts.size()); 
 
-        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).xAxisTitle("rank").yAxisTitle("count").build();
-        chart.getStyleManager().setYAxisLogarithmic(true);
-        chart.getStyleManager().setXAxisLogarithmic(true);
+        Chart c;
+        c = new ChartBuilder().width(WD).height(HT).xAxisTitle("rank").yAxisTitle("count").build();
+        c.getStyleManager().setYAxisLogarithmic(true);
+        c.getStyleManager().setXAxisLogarithmic(true);
         
-        chart.addSeries("zipf", ranks, counts);
-        new SwingWrapper(chart).displayChart();
+        c.addSeries("zipf", ranks, counts);
+        new SwingWrapper(c).displayChart();
     }
 } 

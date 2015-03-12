@@ -141,7 +141,8 @@ public class NGramMap {
         TimeSeries<Double> processedHistory = new TimeSeries<Double>();
         for (Integer year : wordsByYearMap.keySet()) {
             if (year >= startYear && year <= endYear) {
-                processedHistory.put(year, yrp.process(wordsByYearMap.get(year)));
+                double i = yrp.process(wordsByYearMap.get(year));
+                processedHistory.put(year, i);
             }
         }
         return processedHistory;
