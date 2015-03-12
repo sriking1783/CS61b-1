@@ -84,10 +84,12 @@ public class WordNet {
     public Set<String> hyponyms(String word) {
         Set<String> hyponymTree = new TreeSet<String>();
         Set<Integer> countTree = new TreeSet<Integer>();
-        for (Integer key : wordNetGraph.keySet()) {
-            ArrayList<String> current = wordNetGraph.get(key);
-            if (current.contains(word)) {
-                countTree.add(key);
+        if (wordNetGraph.keySet() != null && wordNetGraph.keySet().size() != 0) {
+            for (Integer key : wordNetGraph.keySet()) {
+                ArrayList<String> current = wordNetGraph.get(key);
+                if (current.contains(word)) {
+                    countTree.add(key);
+                }
             }
         }
         Set<Integer> fullTree = GraphHelper.descendants(tree, countTree);

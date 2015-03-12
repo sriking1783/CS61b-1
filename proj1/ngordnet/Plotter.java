@@ -48,7 +48,8 @@ public class Plotter {
       * NGM as a data source, and the YRP as a yearly record processor. */
     public static void plotProcessedHistory(NGramMap ngm, int startYear, int endYear,
                                             YearlyRecordProcessor yrp) {
-
+        TimeSeries<Double> wordWeights = ngm.processedHistory(startYear, endYear, yrp);
+        plotTS(wordWeights, "Word Length", "year", "avg. length", "word length");
     }
 
     /** Creates a plot of the total normalized count of WN.hyponyms(CATEGORYLABEL)
@@ -65,9 +66,8 @@ public class Plotter {
     public static void plotCategoryWeights(NGramMap ngm, WordNet wn, String[] categoryLabels,
                                             int startYear, int endYear) {
         Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).xAxisTitle("years").yAxisTitle("data").build();
-
         for (String category : categoryLabels) {
-            Set<String> words = wn.hyponyms(category);        
+            Set<String> words = wn.hyponyms(category);
             TimeSeries<Double> group = ngm.summedWeightHistory(words, startYear, endYear);
             chart.addSeries(category, group.years(), group.data());
         }
@@ -77,22 +77,7 @@ public class Plotter {
     /** Makes a plot showing overlaid individual normalized count for every word in WORDS
       * from STARTYEAR to ENDYEAR using NGM as a data source. */
     public static void plotAllWords(NGramMap ngm, String[] words, int startYear, int endYear) {
-        // Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("years").yAxisTitle("data").build();
-
-        // for (String word : words) {
-        //     System.out.println("e");
-        //     TimeSeries<Double> group = ngm.weightHistory(word, startYear, endYear);
-        //     System.out.println("d");
-        //     // System.out.println(group.years());
-        //     // System.out.println(group.data());
-        //     chart.addSeries(word, group.years(), group.data());
-        //     System.out.println("e");
-        // }
-        // System.out.println("f");
-        // new SwingWrapper(chart).displayChart();
-        // System.out.println("g");
-
-        Chart chart = new ChartBuilder().width(800).height(600).xAxisTitle("years").yAxisTitle("data").build();
+        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).xAxisTitle("years").yAxisTitle("data").build();
 
         for (String word : words) {
             TimeSeries<Double> group = ngm.weightHistory(word, startYear, endYear);
@@ -114,6 +99,15 @@ public class Plotter {
     /** Plots the count (or weight) of every word against the rank of every word on a
       * log-log plot. Uses data from YEAR, using NGM as a data source. */
     public static void plotZipfsLaw(NGramMap ngm, int year) {
+        YearlyRecord yr = ngm.getRecord(year);
+        Collection<Number> counts = yr.counts();
+        Collection<Number> ranks = downRange(counts.size()); 
 
+        Chart chart = new ChartBuilder().width(WIDTH).height(HEIGHT).xAxisTitle("rank").yAxisTitle("count").build();
+        chart.getStyleManager().setYAxisLogarithmic(true);
+        chart.getStyleManager().setXAxisLogarithmic(true);
+        
+        chart.addSeries("zipf", ranks, counts);
+        new SwingWrapper(chart).displayChart();
     }
 } 
