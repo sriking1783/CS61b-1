@@ -1,0 +1,8 @@
+1 T Put function is bounded by Θ(log(N)) anyways.
+2 T At every recursive call, we only search half of the unsearch part of the map.
+3 F Put function is bounded around Θ(log N).
+4 T Put function bound is less than N, because we only search half the list each call.
+5 T Definitely passes that because O(N^2) time is much slower that O(log(N)) time.
+6 F Put will take ~2(ln N), but containsKey may take longer (upto Θ(N) more time).
+7 F containsKey(C) will not work if C != K, and the first key could be K, so constant time.
+8 O(1.5 ^ N)
