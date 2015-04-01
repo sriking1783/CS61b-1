@@ -97,7 +97,7 @@ public class Nana {
 
     // Is hashCodeD() a perfect hash for Nana? Return "yes" or "no"
     public static final String isPerfectHashD() {
-        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     // Is hashCodeE() a perfect hash for Nana? Return "yes" or "no"
@@ -130,7 +130,7 @@ public class Nana {
 
     // Is hashCodeD() a valid hash for Nana? Return "yes" or "no"
     public static final String isValidHashD() {
-        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     // Is hashCodeE() a valid hash for Nana? Return "yes" or "no"
