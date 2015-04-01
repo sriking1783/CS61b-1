@@ -2,6 +2,7 @@ import java.util.HashMap; // Import Java's HashMap so we can use it
 
 public class FibonacciMemo {
 
+    private static HashMap<int, int> fibNumSeq = new HashMap<int, int>();
     /**
      * The classic recursive implementation with no memoization. Don't care
      * about graceful error catching, we're only interested in performance.
@@ -24,7 +25,7 @@ public class FibonacciMemo {
      * @return The nth fibonacci number
      */
     public static int fibMemo(int n) {
-        // YOUR CODE HERE
+        int fibNumber = fibMemo()
         return 0;
     }
 
