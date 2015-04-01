@@ -25,7 +25,12 @@ public class FibonacciMemo {
      * @return The nth fibonacci number
      */
     public static int fibMemo(int n) {
-        int fibNumber = fibMemo()
+        int fibNumber = 0;
+        if (n > 1) {
+            fibNumber = fibMemo(n - 2) + fibMemo(n - 1);
+        } else {
+            fibNumber
+        }
         return 0;
     }
 

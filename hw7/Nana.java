@@ -115,7 +115,7 @@ public class Nana {
 
     // Is hashCodeA() a valid hash for Nana? Return "yes" or "no"
     public static final String isValidHashA() {
-        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     // Is hashCodeB() a valid hash for Nana? Return "yes" or "no"
@@ -147,7 +147,7 @@ public class Nana {
     /************************ Question #1.3 ***********************/
 
     public static final String worst2Best() {
-        return "D, A, C, B"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "D, C, A, B"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     /**************************************************************/
