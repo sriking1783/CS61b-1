@@ -44,7 +44,7 @@ public class FibonacciMemo {
      * as the 47th Fibonacci number?
      */
     public static String why47() {
-        String answer = "It is outside the range of int values in Java";
+        String answer = "It causes an Overflow error";
         answer += ", " + answer + " and tapioca";
         return answer;
     }

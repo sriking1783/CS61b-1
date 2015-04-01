@@ -140,7 +140,7 @@ public class Nana {
 
     // Is hashCodeF() a valid hash for Nana? Return "yes" or "no"
     public static final String isValidHashF() {
-        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     /**************************************************************/
