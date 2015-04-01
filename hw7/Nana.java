@@ -82,7 +82,7 @@ public class Nana {
 
     // Is hashCodeA() a perfect hash for Nana? Return "yes" or "no"
     public static final String isPerfectHashA() {
-        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     // Is hashCodeB() a perfect hash for Nana? Return "yes" or "no"
@@ -102,7 +102,7 @@ public class Nana {
 
     // Is hashCodeE() a perfect hash for Nana? Return "yes" or "no"
     public static final String isPerfectHashE() {
-        return "yes"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "no"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     // Is hashCodeF() a perfect hash for Nana? Return "yes" or "no"
@@ -147,7 +147,7 @@ public class Nana {
     /************************ Question #1.3 ***********************/
 
     public static final String worst2Best() {
-        return ", , , B"; // REPLACE THIS LINE WITH YOUR ANSWER 
+        return "B, B, B, B"; // REPLACE THIS LINE WITH YOUR ANSWER 
     }
 
     /**************************************************************/
