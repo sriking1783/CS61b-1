@@ -44,7 +44,7 @@ public class FibonacciMemo {
      * as the 47th Fibonacci number?
      */
     public static String why47() {
-        String answer = "It causes an Overflow error";
+        String answer = "It causes an overflow error";
         answer += ", " + answer + " and tapioca";
         return answer;
     }
