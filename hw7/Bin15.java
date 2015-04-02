@@ -51,7 +51,7 @@ public class Bin15 {
     
     @Override
     public int hashCode() {
-        return Integer.parseInt(myBinStr); // YOUR CODE HERE
+        return Integer.parseInt(myBinStr, 2); // YOUR CODE HERE
     }
 
     /* DO THIS LAST, AFTER IMPLEMENTING EVERYTHING
