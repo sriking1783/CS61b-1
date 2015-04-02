@@ -4,7 +4,7 @@ import java.util.Set;
  * declaration, though you can use other formal type parameters if you'd like.
  * For example, you can also say "... implements Map61B<Ben, Jerry>".
  */ 
-public class MyHashMap<K, V> {
+public class MyHashMap<K, V> implements Map61B<K, V> {
     /** Removes all of the mappings from this map. */
     public void clear() {
 
