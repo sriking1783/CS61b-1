@@ -39,9 +39,8 @@ public class Board {
     public int hashCode() {
         int hash = 0;
         for (int i = 0; i < SIZE; i++) {
-                for (int j = 0; j < SIZE; j++) {
+            for (int j = 0; j < SIZE; j++) {
                     hash += pieces[i][j].hashCode();
-                }
             }
         }
         return hash;
