@@ -93,7 +93,7 @@ public class Piece {
         if (isFire()) {
             fire = 10 * 10;
         }
-        int x = 10 * thix.x;
+        int x = 10 * this.x;
         int y = this.y;
         return x + y + fire + king + pawn + bomb + shield; // YOUR CODE HERE
     }
