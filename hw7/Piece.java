@@ -73,7 +73,23 @@ public class Piece {
 
     @Override
     public int hashCode() {
-        return 5; // YOUR CODE HERE
+        int shield = 0;
+        int bomb = 0;
+        int pawn = 0;
+        if (isShield()) {
+           shield = 10 * 10 * 10 * 10;
+        }
+        if (isBomb()) {
+            bomb = 10 * 10 * 10 * 10 * 10;
+        }
+        if (!isShield() && !isBomb()) {
+            pawn = 10 * 10 * 10 * 10 * 10 * 10;
+        }
+        int king = 10 * 10 * 10 * this.isKing;
+        int fire = 10 * 10 * this.side;
+        int x = 10 * thix.x;
+        int y = this.y;
+        return x + y + fire + king + pawn + bomb + shield; // YOUR CODE HERE
     }
 
     public static void main(String[] args) {
