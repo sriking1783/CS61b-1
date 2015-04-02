@@ -76,6 +76,8 @@ public class Piece {
         int shield = 0;
         int bomb = 0;
         int pawn = 0;
+        int king = 0;
+        int fire = 0;
         if (isShield()) {
            shield = 10 * 10 * 10 * 10;
         }
@@ -85,8 +87,12 @@ public class Piece {
         if (!isShield() && !isBomb()) {
             pawn = 10 * 10 * 10 * 10 * 10 * 10;
         }
-        int king = 10 * 10 * 10 * this.isKing;
-        int fire = 10 * 10 * this.side;
+        if (isKing()) {
+            king = 10 * 10 * 10;
+        }
+        if (isFire()) {
+            fire = 10 * 10;
+        }
         int x = 10 * thix.x;
         int y = this.y;
         return x + y + fire + king + pawn + bomb + shield; // YOUR CODE HERE
