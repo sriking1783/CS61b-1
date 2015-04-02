@@ -20,8 +20,7 @@ public class UsernameBank {
     }
 
     public String getUsername(String userEmail)  {
-
-        // return null;
+        return null;
     }
 
     public Map<String, Integer> getBadEmails() {
