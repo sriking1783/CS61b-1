@@ -41,7 +41,7 @@ public class UsernameBank {
     // The answer is somewhere in between 3 and 1000.
     public static final int followUp() {
         // YOUR CODE HERE
-        return 8;
+        return 6;
     }
 
     // Optional, suggested method. Use or delete as you prefer.
