@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.util.HashMap;
 
 public class UsernameBank {
 
@@ -19,8 +20,8 @@ public class UsernameBank {
     }
 
     public String getUsername(String userEmail)  {
-        // YOUR CODE HERE
-        return null;
+
+        // return null;
     }
 
     public Map<String, Integer> getBadEmails() {
