@@ -61,7 +61,14 @@ public class Piece {
 
     @Override
     public boolean equals(Object o) {
-        return false; // YOUR CODE HERE
+        if (o != null && o instanceof Piece) {
+            Piece obj = (Piece) o;
+            if (obj.isFire() == this.side && obj.isKing() == this.isKing()
+                && obj.isBomb() == this.isBomb() && obj.isShield() == this.isShield()) {
+                    return true;
+                }
+        }
+        return false;
     }
 
     @Override

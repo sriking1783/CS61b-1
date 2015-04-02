@@ -22,7 +22,17 @@ public class Board {
 
 	@Override
 	public boolean equals(Object o) {
-        return true; // YOUR CODE HERE
+        if (o != null && o instanceof Board) {
+            Board obj = (Board) o;
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (obj.pieces[i][j].equals(this.pieces[i][j])) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // YOUR CODE HERE
 	}
 
     @Override

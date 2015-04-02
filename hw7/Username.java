@@ -10,7 +10,11 @@ public class Username {
     }
 
     public Username(String reqName) {
-        // YOUR CODE HERE
+        if (repName.length() != 3) {
+            throw IllegalArgumentException("String is of the wrong length.");
+        } else if (repName == null) {
+            throw NullPointerException("Requested username is null!");
+        }
     }
 
     @Override
