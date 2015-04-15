@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.Serializable;
 import java.util.Date;
+import java.io.File;
 
 /** Thought of this idea after looking at the BSTMap.java file we created in hw6. We use this
   * class to keep track of the connections between each Commit, so that we don't lose
@@ -20,19 +22,39 @@ public class CommitBody implements Serializable {
     /** Keeps track of the current time when the commit was made */
     private Date commitTime;
 
+    /** Used to store all of the files that have been added (not inherited) in this commit. */
+    private HashMap<File, Integer> filesInCommit = new HashMap<File, Integer>();
+    /** Keeps track of all files that were inherited from the previous commits as well as the
+      * most recent commit where there was a change in the file (inherited from past pointer). */
+    private HashMap<File, Integer> inheritedFiles = new HashMap<File, Integer>();
+
     /********** CONSTRUCTORS **********/
 
-    public CommitBody(CommitBody prev, ArrayList<CommitBody> next) {
+    public CommitBody(String msg, CommitBody prev, ArrayList<CommitBody> next) {
+        message = msg;
         past = prev;
         future = next;
         commitTime = new Date();
+        if (past != null && past.getInherits() != null) {
+            inheritedFiles = new HashMap<File, Integer>(past.getInherits());
+        }
+        if (past != null && past.getAddedFiles() != null) {
+            inheritedFiles.putAll(past.getAddedFiles());
+        }
     }
 
     /** Most commits will be of this form (unless revert is called) */
-    public CommitBody(CommitBody prev) {
+    public CommitBody(String msg, CommitBody prev) {
+        message = msg;
         past = prev;
         future = null;
         commitTime = new Date();
+        if (past != null && past.getInherits() != null) {
+            inheritedFiles = new HashMap<File, Integer>(past.getInherits());
+        }
+        if (past != null && past.getAddedFiles() != null) {
+            inheritedFiles.putAll(past.getAddedFiles());
+        }
     }
 
     public CommitBody(String msg) {
@@ -40,16 +62,25 @@ public class CommitBody implements Serializable {
         past = null;
         future = null;
         commitTime = new Date();
-    }
-
-    /** Only really useful for the initial commit */
-    public CommitBody() {
-        past = null;
-        future = null;
-        commitTime = new Date();
+        if (past != null && past.inheritedFiles != null) {
+            inheritedFiles = new HashMap<File, Integer>(past.getInherits());
+        }
+        if (past != null && past.filesInCommit != null) {
+            inheritedFiles.putAll(past.getAddedFiles());
+        }
     }
 
     /********** METHODS **********/
+
+    /** Used to get all inherited files (primarily from past commit) */
+    public HashMap<File, Integer> getInherits() {
+        return inheritedFiles;
+    }
+
+    /** Used to get all added files (from past commit) */
+    public HashMap<File, Integer> getAddedFiles() {
+        return filesInCommit;
+    }
 
     /** Returns the message (so other classes can access it) */
     public String message() {
@@ -76,4 +107,8 @@ public class CommitBody implements Serializable {
         return commitTime;
     }
 
+    /** Adds the file to the current CommitBody. */
+    public void addToCommit(File file) {
+        filesInCommit.put(file, commitID);
+    }
 }

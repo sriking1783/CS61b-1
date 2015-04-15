@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Date;
 import java.io.File;
 
-
 public class Gitlet {
 
     /** After deserialization, returns the latest commit object. (Can make this variable static
@@ -15,9 +14,9 @@ public class Gitlet {
     public static void main(String[] args) {
         // Deserialize, then mark the commit as the private var
 
-        initialize();
-        branch("hello");
-        removeBranch("hello");
+        // initialize();
+        // branch("hello");
+        // removeBranch("hello");
 
         String initArg = args[0];
         switch (initArg) {
@@ -53,7 +52,7 @@ public class Gitlet {
                 // if (args.length == 3) {
                 //     checkout(args[2]);
                 // } else {
-                //     checkout(args[2], args[3]);
+                //     checkout(Integer.parseInt(args[2]), args[3]);
                 // }
                 break;
             case "branch":
@@ -99,6 +98,10 @@ public class Gitlet {
         // 1. Make the .gitlet directory
         File gitlet = new File(".gitlet");
         gitlet.mkdir();
+        File newestFiles = new File(".gitlet/latestVersion");
+        newestFiles.mkdir();
+        File pastFiles = new File(".gitlet/pastVersions");
+        pastFiles.mkdir();
         // 2. Blank commit with message 'initial commit'
         commitTree = new Commit();
         commitTree.setDefBranch("master");
@@ -107,7 +110,7 @@ public class Gitlet {
         init.updateCommitID(commitTree.getLatestCommitID());
         commitTree.addBranch(commitTree.getDefBranch(), init);
         commitTree.addCommit(initCommitMessage, init);
-        commitTree.initializeAddRemove();
+        commitTree.initializeAddRemove(init);
     }
 
     /** Indicated that you want the file to be included in the upcoming commit as
@@ -137,11 +140,24 @@ public class Gitlet {
     public static void commit(String message) {
         if (/* no files have been staged or marked for removal */ true) {
             System.out.println("No changes added to the commit.");
-            /* ABORT */
+            return;
         }
         if (message.equals("")) {
             System.out.println("Please enter a commit message.");
+            return;
         }
+        // Set the previous of the new commit node
+        CommitBody now = new CommitBody(message, commitTree.getBody(commitTree.getDefBranch()));
+        now.updateCommitID(commitTree.getLatestCommitID());
+        commitTree.updateCommitFiles(now);
+        commitTree.addCommit(message, now);
+        // Figure out where to add the commit to the commit node
+
+        // Update the head pointer (branches) to newest value
+        commitTree.setBranchToCommit(now);
+        commitTree.addCommit(message, now);
+        // ADD FILES TO ACTUAl .GITLET FOLDER
+        
     }
 
     /** Mark the file for removal. This means that it will not be inherited as
@@ -183,7 +199,7 @@ public class Gitlet {
             System.out.println("Commit " + head.getCommitID() + ".");
             SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
             String timeOfCommit = dateTime.format(head.getDate());
-            System.out.println(timeOfCommit + ".");
+            System.out.println(timeOfCommit);
             System.out.println(head.message());
             if (head.getCommitID() != 0) {
                System.out.println();
@@ -205,7 +221,7 @@ public class Gitlet {
                 System.out.println("Commit " + head.getCommitID() + ".");
                 SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
                 String timeOfCommit = dateTime.format(head.getDate());
-                System.out.println(timeOfCommit + ".");
+                System.out.println(timeOfCommit);
                 System.out.println(head.message());
                 if (head.getCommitID() != 0) {
                    System.out.println();
@@ -274,11 +290,17 @@ public class Gitlet {
       * 
       * Runtime: Should be linear to the size of the file being checked out. */
     public static void checkout(String filename) {
-        if (/** file does not exist in the previous commit */ true) {
-            String msg = "File does not exist in the most recent commit, or no such branch exists.";
-            System.out.println(msg);
+        if (/*allBranches.contains(filename)*/ true) {
+            checkoutBranch(filename);
             return;
         }
+        if (/** file does not exist in the previous commit */ true) {
+            String m = "File does not exist in the most recent commit, or no such branch exists.";
+            System.out.println(m);
+            return;
+        }
+        /** DO THIS - Restore given file in the working directory to its state at the commit at
+          * the head of the current branch */
     }
 
     /** Restores the given file in the working directory to its state at the given
@@ -294,8 +316,6 @@ public class Gitlet {
             System.out.println("File does not exist in that commit.");
             return;
         }
-
-        // DO THIS PART!!
     }
 
     /** Restores all files in the working directory to their versions in the commit
@@ -307,11 +327,13 @@ public class Gitlet {
       * number of commits. Should be constant with respect to the number of branches. */
     public static void checkoutBranch(String branchName) {
         if (/** no branch with that name exists */ 1 == 2) {
-            String msg = "File does not exist in the most recent commit, or no such branch exists.";
-            System.out.println(msg);
+            String m = "File does not exist in the most recent commit, or no such branch exists.";
+            System.out.println(m);
         } else if (/** that branch is the current branch */ true) {
             System.out.println("No need to checkout the current branch.");
         }
+        /** DO THIS - Restore all files in the working directory to their states at the commit at
+          * the head of the given branch. Make given branch the current branch. */
     }
 
     /** Creates a new branch with the given name. (A branch is nothing more than

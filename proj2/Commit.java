@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Date;
+import java.io.File;
 import java.io.*;
 
 public class Commit implements Serializable {
@@ -18,6 +19,20 @@ public class Commit implements Serializable {
     /** Using a given message, we can find every CommitBody that has that same message. Used to
       * help keep track of all of the commits that exist. */
     private HashMap<String, ArrayList<CommitBody>> allCommits;
+
+    /******** INCORPORATE (IF NECESSARY) ********/
+
+    /** Keeps track of all of the files that have been added (not inherited) to each commit. If
+      * a new commit is made, add its commitID as the integer and the appropriate files. */
+    private HashMap<Integer, ArrayList<File>> filesByCommit;
+    /** Keeps track of all the files that have ever been inherited or committed. */
+    private ArrayList<File> allInheritedFiles;
+    /** Stores the latest versions of each file across all commits. Any time that a file that was
+      * committed before added, remove the previous version and add the latest one. Also update its
+      * commitID as the value, so we know what the latest commit version is. */
+    private HashMap<String, Integer> latestVersions;
+
+    /******** INCORPORATE (IF NECESSARY) ********/
 
     /** Keeps track of the current branch that we are checked out into. Whenever checkout
       * is called, change this variable and the value will change for all "initializations"
@@ -39,6 +54,9 @@ public class Commit implements Serializable {
         allBranches = new HashSet<String>();
         allCommits = new HashMap<String, ArrayList<CommitBody>>();
         commitIDCounter = 0;
+        filesByCommit = new HashMap<Integer, ArrayList<File>>();
+        allInheritedFiles = new ArrayList<File>();
+        latestVersions = new HashMap<String, Integer>();
     }
 
     /********** METHODS **********/
@@ -55,9 +73,9 @@ public class Commit implements Serializable {
         return commitIDCounter;
     }
 
-    /** Returns the object with the given message as its commit name */
-    public CommitBody getBody(String msg) {
-        return this.branches.get(msg);
+    /** Returns the CommitBody that the head pointer points to. */
+    public CommitBody getBody(String head) {
+        return this.branches.get(head);
     }
 
     /** Returns the current branch being used */
@@ -87,7 +105,7 @@ public class Commit implements Serializable {
 
     /** Sets addFiles and removeFiles to initial values. Made it a separate method becayse I was
       * unsure of whether or not I would need it later */
-    public void initializeAddRemove() {
+    public void initializeAddRemove(CommitBody first) {
         addFiles = new HashSet<String>();
         removeFiles = new HashSet<String>();
     }
@@ -109,6 +127,11 @@ public class Commit implements Serializable {
         currBranch = branchName;
     }
 
+    /** Sets the current branch to the newest commit object */
+    public void setBranchToCommit(CommitBody newest) {
+        branches.put(currBranch, newest);
+    }
+
     /** Adds a commit to the list of all commits */
     public void addCommit(String commitMsg, CommitBody addedCommit) {
         if (!allCommits.containsKey(commitMsg)) {
@@ -116,6 +139,32 @@ public class Commit implements Serializable {
             allCommits.put(commitMsg, commonMessage);
         }
         allCommits.get(commitMsg).add(addedCommit);
+    }
+
+    /** Does the core work of the commit method in Gitlet. When we decided to make a new commit
+      * and instantiate a version of the CommitBody object to add to our commit tree, create a
+      * File class version to save each file and add it to the list of files that belong in this
+      * commit node.  */
+    public void updateCommitFiles(CommitBody newCommit) {
+        ArrayList<File> files = new ArrayList<File>();
+        for (String name : addFiles) {
+            File file = new File(name);
+            if (file.exists() && file.isFile()) {
+                /***** FIX THIS!!!!!!!! *****/
+                /***** FIX THIS!!!!!!!! *****/
+                /***** FIX THIS!!!!!!!! *****/
+                /***** FIX THIS!!!!!!!! *****/
+                /***** FIX THIS!!!!!!!! *****/
+                /***** FIX THIS!!!!!!!! *****/
+                newCommit.addToCommit(file);
+                files.add(file);
+                if (latestVersions.containsKey(name)) {
+                    latestVersions.remove(name);
+                }
+                latestVersions.put(name, newCommit.getCommitID());
+            }
+        }
+        filesByCommit.put(newCommit.getCommitID(), files);
     }
 
     /** Decides if a file can be added, and adds it if appropriate */
