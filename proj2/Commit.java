@@ -172,7 +172,7 @@ public class Commit implements Serializable {
                 String corePath = ".gitlet/" + directory.getName() + "/";
                 String thePathname = corePath + file.getName();
                 String actualFile = makeApprDirs(corePath, name);
-                File newFile = new File(actualFile);
+                File newFile = new File(thePathname);
                 try {
                     Files.copy(file.toPath(), newFile.toPath());
                 } catch (IOException m) {
