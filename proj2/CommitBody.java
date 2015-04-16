@@ -27,10 +27,13 @@ public class CommitBody implements Serializable {
     private ArrayList<String> listFilesInCommit = new ArrayList<String>();
     /** Keeps track of all files that were inherited from the previous commits as well as the
       * most recent commit where there was a change in the file (inherited from past pointer). */
-    private HashMap<String, ArrayList<Integer>> inheritedFiles = new HashMap<String, ArrayList<Integer>>();
+    private HashMap<String, ArrayList<Integer>> inheritedFiles
+            = new HashMap<String, ArrayList<Integer>>();
     /** Keeps all of the inherited files of the previous version and also adds in all newly added
-      * objects. Used to define the inherited files of the next commit. Last element = latest commit. */
-    private HashMap<String, ArrayList<Integer>> inheritedPlusAdded = new HashMap<String, ArrayList<Integer>>();
+      * objects. Used to define the inherited files of the next commit. Last element = latest
+      * commit. */
+    private HashMap<String, ArrayList<Integer>> inheritedPlusAdded
+            = new HashMap<String, ArrayList<Integer>>();
 
     /** Temporarily stores any mappings that are removed from inheritedPlusAdded; incase we need to
       * re-add the object, simply copy the mapping from here to the other map. */
@@ -126,7 +129,7 @@ public class CommitBody implements Serializable {
     }
 
     /** Returns the time when the commit was made. */
-    public Date getDate(){
+    public Date getDate() {
         return commitTime;
     }
 

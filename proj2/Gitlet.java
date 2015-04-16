@@ -1,12 +1,9 @@
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.HashMap;
-import java.util.Date;
 import java.io.File;
 
 public class Gitlet {
@@ -84,6 +81,8 @@ public class Gitlet {
                 String branchsName = args[1];
                 // interactiveRebase(branchsName);
                 break;
+            default:
+                break;
         }
         /** After main command has been run, serialize the commitTree object before closing */
         Commit.serialize(commitTree);
@@ -156,7 +155,9 @@ public class Gitlet {
                 System.out.println("File has not been modified since the last commit.");
                 return;
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         commitTree.stageFile(filename, commitTree.getBody(commitTree.getDefBranch()));
     }
@@ -361,7 +362,9 @@ public class Gitlet {
         }
         try {
             Files.copy(pastVersion.toPath(), new File(filename).toPath());
-        } catch (IOException m) {} 
+        } catch (IOException m) {
+            m.printStackTrace();
+        } 
     }
 
     /** Restores the given file in the working directory to its state at the given
@@ -417,7 +420,9 @@ public class Gitlet {
             }
             try {
                 Files.copy(pastVersion.toPath(), new File(filename).toPath());
-            } catch (IOException m) {} 
+            } catch (IOException m) {
+                m.printStackTrace();
+            }
         }
         // Set branch to be the current branch. */
         commitTree.setDefBranch(branchName);

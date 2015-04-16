@@ -1,4 +1,3 @@
-import java.nio.file.StandardCopyOption;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
@@ -8,11 +7,9 @@ import java.io.Serializable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.HashSet;
-import java.util.Date;
 import java.io.File;
 
 public class Commit implements Serializable {
@@ -172,12 +169,15 @@ public class Commit implements Serializable {
                 }
                 latestVersions.put(name, newCommit.getCommitID());
                 // Move files to Commit_#id file
-                String thePathname = ".gitlet/" + directory.getName() + "/" + file.getName();
-                String actualFile = makeApprDirs(thePathname);
+                String corePath = ".gitlet/" + directory.getName() + "/";
+                String thePathname = corePath + file.getName();
+                String actualFile = makeApprDirs(corePath, name);
                 File newFile = new File(actualFile);
                 try {
                     Files.copy(file.toPath(), newFile.toPath());
-                } catch (IOException m) {}        
+                } catch (IOException m) {
+                    m.printStackTrace();
+                }
             }
         }
         filesByCommit.put(newCommit.getCommitID(), newCommit.getAddedFiles());
@@ -185,15 +185,19 @@ public class Commit implements Serializable {
         removeFiles = new HashSet<String>();
     }
 
-    private String makeApprDirs(String pathname) {
+    private String makeApprDirs(String core, String pathname) {
         String[] splitName = pathname.split("/");
-        int counts = 0;
-        while (counts > splitName.length - 2) {
-            File dir = new File(splitName[counts]);
+        String path = core;
+        for (int counts = 0; counts < splitName.length - 1; counts++) {
+            path = path + splitName[counts] + "/";
+            System.out.println(splitName[counts]);
+            System.out.println("hiiiiii");
+            System.out.println(path);
+            File dir = new File(path);
             dir.mkdir();
-            counts += 1;
         }
-        return splitName[splitName.length - 2];
+        System.out.println(path + splitName[splitName.length - 1]);
+        return path + splitName[splitName.length - 1];
     }
 
     /** Decides if a file can be added, and adds it if appropriate */
@@ -208,8 +212,8 @@ public class Commit implements Serializable {
 
     /* Decides if a file needs to be removed, and removes it if appropriate */
     public void removeFile(String filename) {
-        if (!addFiles.contains(filename) &&
-            !branches.get(currBranch).getInherits().containsKey(filename)) {
+        if (!addFiles.contains(filename)
+            && !branches.get(currBranch).getInherits().containsKey(filename)) {
             System.out.println("No reason to remove the file.");
             return;
         }
@@ -224,8 +228,8 @@ public class Commit implements Serializable {
     /********** SERIALIZATION **********/
 
     /** Responsible for writing the state of the object for its particular class so that
-	  * readObject() can restore it. Call out.defaultWriteObject to save the Object's field. */
-    public static void serialize(Commit myCommit){
+      * readObject() can restore it. Call out.defaultWriteObject to save the Object's field. */
+    public static void serialize(Commit myCommit) {
         if (myCommit == null) {
             return;
         }
@@ -241,9 +245,9 @@ public class Commit implements Serializable {
     }
 
     /** Responsible for reading from the stream and restoring the class fields. May call 
-	  * in.defaultReadObject to restore te object's non-static and non-transient fields.
-	  * Uses info in the steam to asign fields to the correspondingly named fields in the
-	  * current object. */ 
+      * in.defaultReadObject to restore te object's non-static and non-transient fields.
+      * Uses info in the steam to asign fields to the correspondingly named fields in the
+      * current object. */ 
     public static Commit deserialize() {
         Commit myCommit = null;
         File myCommitFile = new File(".gitlet/myCommit.ser");
