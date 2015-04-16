@@ -1,12 +1,19 @@
-import java.io.Serializable;
-import java.io.ObjectInputStream;
+import java.nio.file.StandardCopyOption;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.util.Collections;
+import java.io.Serializable;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.HashSet;
 import java.util.Date;
 import java.io.File;
-import java.io.*;
 
 public class Commit implements Serializable {
 
@@ -19,21 +26,15 @@ public class Commit implements Serializable {
     /** Using a given message, we can find every CommitBody that has that same message. Used to
       * help keep track of all of the commits that exist. */
     private HashMap<String, ArrayList<CommitBody>> allCommits;
-
-    /******** INCORPORATE (IF NECESSARY) ********/
-
     /** Keeps track of all of the files that have been added (not inherited) to each commit. If
       * a new commit is made, add its commitID as the integer and the appropriate files. */
     private HashMap<Integer, ArrayList<File>> filesByCommit;
-    /** Keeps track of all the files that have ever been inherited or committed. */
-    private ArrayList<File> allInheritedFiles;
     /** Stores the latest versions of each file across all commits. Any time that a file that was
       * committed before added, remove the previous version and add the latest one. Also update its
       * commitID as the value, so we know what the latest commit version is. */
     private HashMap<String, Integer> latestVersions;
-
-    /******** INCORPORATE (IF NECESSARY) ********/
-
+    /** Keeps track of all CommitBody objects, with their IDs as the keys. */
+    private TreeMap<Integer, CommitBody> eachCommit;
     /** Keeps track of the current branch that we are checked out into. Whenever checkout
       * is called, change this variable and the value will change for all "initializations"
       * of Gitlet. Useful for making methods in the Commit class much easier. */
@@ -49,14 +50,16 @@ public class Commit implements Serializable {
       * for each CommitBody object. */
     private int commitIDCounter;
 
+    /********** CONSTRUCTOR **********/
+
     public Commit() {
         branches = new HashMap<String, CommitBody>();
         allBranches = new HashSet<String>();
         allCommits = new HashMap<String, ArrayList<CommitBody>>();
         commitIDCounter = 0;
         filesByCommit = new HashMap<Integer, ArrayList<File>>();
-        allInheritedFiles = new ArrayList<File>();
         latestVersions = new HashMap<String, Integer>();
+        eachCommit = new TreeMap<Integer, CommitBody>(Collections.reverseOrder());
     }
 
     /********** METHODS **********/
@@ -73,6 +76,14 @@ public class Commit implements Serializable {
         return commitIDCounter;
     }
 
+    /** Returns the commitID of the latest updated version of the file. */
+    public int getLatestVersion(String filename) {
+        if (latestVersions.containsKey(filename)) {
+            return latestVersions.get(filename);
+        }
+        return -1;
+    }
+
     /** Returns the CommitBody that the head pointer points to. */
     public CommitBody getBody(String head) {
         return this.branches.get(head);
@@ -87,6 +98,11 @@ public class Commit implements Serializable {
     public HashMap<String, ArrayList<CommitBody>> getAllCommits() {
         return allCommits;
     }
+
+    /** Returns the hashmap that goes from all commitIDs to their respective commits. */
+    public TreeMap<Integer, CommitBody> getEachCommit() {
+        return eachCommit;
+    } 
 
     /** Returns the set of added files. */
     public HashSet<String> getAddFiles() {
@@ -139,38 +155,40 @@ public class Commit implements Serializable {
             allCommits.put(commitMsg, commonMessage);
         }
         allCommits.get(commitMsg).add(addedCommit);
+        eachCommit.put(addedCommit.getCommitID(), addedCommit);
     }
 
     /** Does the core work of the commit method in Gitlet. When we decided to make a new commit
       * and instantiate a version of the CommitBody object to add to our commit tree, create a
       * File class version to save each file and add it to the list of files that belong in this
       * commit node.  */
-    public void updateCommitFiles(CommitBody newCommit) {
-        ArrayList<File> files = new ArrayList<File>();
+    public void updateCommitFiles(CommitBody newCommit, File directory) {
         for (String name : addFiles) {
             File file = new File(name);
-            if (file.exists() && file.isFile()) {
-                /***** FIX THIS!!!!!!!! *****/
-                /***** FIX THIS!!!!!!!! *****/
-                /***** FIX THIS!!!!!!!! *****/
-                /***** FIX THIS!!!!!!!! *****/
-                /***** FIX THIS!!!!!!!! *****/
-                /***** FIX THIS!!!!!!!! *****/
+            if (file.exists()) {
                 newCommit.addToCommit(file);
-                files.add(file);
                 if (latestVersions.containsKey(name)) {
                     latestVersions.remove(name);
                 }
                 latestVersions.put(name, newCommit.getCommitID());
+                // Move files to Commit_#id file
+                String thePathname = ".gitlet/" + directory.getName() + "/" + file.getName();
+                File newFile = new File(thePathname);
+                try {
+                    Files.copy(file.toPath(), newFile.toPath());
+                } catch (IOException m) {}        
             }
         }
-        filesByCommit.put(newCommit.getCommitID(), files);
+        filesByCommit.put(newCommit.getCommitID(), newCommit.getAddedFiles());
+        addFiles = new HashSet<String>();
+        removeFiles = new HashSet<String>();
     }
 
     /** Decides if a file can be added, and adds it if appropriate */
-    public void stageFile(String filename) {
+    public void stageFile(String filename, CommitBody back) {
         if (removeFiles.contains(filename)) {
             removeFiles.remove(filename);
+            back.reInherit(filename);
             return;
         }
         addFiles.add(filename);
@@ -178,68 +196,58 @@ public class Commit implements Serializable {
 
     /* Decides if a file needs to be removed, and removes it if appropriate */
     public void removeFile(String filename) {
-        if (!addFiles.contains(filename)) {
+        if (!addFiles.contains(filename) &&
+            !branches.get(currBranch).getInherits().containsKey(filename)) {
             System.out.println("No reason to remove the file.");
             return;
         }
         if (addFiles.contains(filename)) {
-            //FIll tHIS INN!!!!!!!
+            addFiles.remove(filename);
+        } else {
+            branches.get(currBranch).removeFromInherits(filename);
         }
+        removeFiles.add(filename);
     }
 
     /********** SERIALIZATION **********/
 
     /** Responsible for writing the state of the object for its particular class so that
 	  * readObject() can restore it. Call out.defaultWriteObject to save the Object's field. */
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.defaultWriteObject();
+    public static void serialize(Commit myCommit){
+        if (myCommit == null) {
+            return;
+        }
+        try {
+            File myCommitFile = new File(".gitlet/myCommit.ser");
+            FileOutputStream fileOut = new FileOutputStream(myCommitFile);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(myCommit);
+        } catch (IOException e) {
+            String msg = "IOException while saving myCommit.";
+            System.out.println(msg);
+        }
     }
 
     /** Responsible for reading from the stream and restoring the class fields. May call 
 	  * in.defaultReadObject to restore te object's non-static and non-transient fields.
 	  * Uses info in the steam to asign fields to the correspondingly named fields in the
 	  * current object. */ 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-    }
-
-    // * Responsible for initializin the state of the object for a particular class if
-    //   * serializaion stream does not list the given class as a superclass of a desterialized
-    //   * object. 
-    // private void readObjectNoData() throws ObjectOutputStream {
-
-    // }
-
-    /** READD THIS IF NECESSARY
-    public static void main(String[] args) {
-        ArrayList<String> a1 = new ArrayList<String>();
-        a1.add("Hello");
-        a1.add("Hi");
-        a1.add("Howdy");
-        try {
-            FileOutputStream outFiles = new FileOutputStream("/.gitlet/commits.ser");
-            ObjectOutputStream out = new ObjectOutputStream(outFiles);
-            out.writeObject(a1);
-            out.close();
-            outFiles.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static Commit deserialize() {
+        Commit myCommit = null;
+        File myCommitFile = new File(".gitlet/myCommit.ser");
+        if (myCommitFile.exists()) {
+            try {
+                FileInputStream fileIn = new FileInputStream(myCommitFile);
+                ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+                myCommit = (Commit) objectIn.readObject();
+            } catch (IOException e) {
+                String msg = "IOException while loading myCommit.";
+                System.out.println(msg);
+            } catch (ClassNotFoundException e) {
+                String msg = "ClassNotFoundException while loading myCommit.";
+                System.out.println(msg);
+            }
         }
-
-        ArrayList<String> a2 = new ArrayList<String>();
-        try {
-            FileInputStream f2 = new FileInputStream("myfile.ser");
-            ObjectInputStream o2 = new ObjectInputStream(f2);
-            a2 = (ArrayList) o2.readObject();
-            o2.close();
-            System.out.println("One: " + a2.get(0) + ", Two: " + a2.get(1) + ", Three: " + a2.get(2));
-        } catch (FileNotFoundException e2) {
-            e2.printStackTrace();
-        } catch (IOException e2) {
-            e2.printStackTrace();
-        } catch (ClassNotFoundException e2) {
-            e2.printStackTrace();
-        }
+        return myCommit;
     }
-    */
 }

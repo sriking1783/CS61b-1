@@ -1,5 +1,9 @@
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Date;
@@ -13,10 +17,7 @@ public class Gitlet {
 
     public static void main(String[] args) {
         // Deserialize, then mark the commit as the private var
-
-        // initialize();
-        // branch("hello");
-        // removeBranch("hello");
+        commitTree = Commit.deserialize();
 
         String initArg = args[0];
         switch (initArg) {
@@ -25,15 +26,19 @@ public class Gitlet {
                 break;
             case "add":
                 String fileName = args[1];
-                // add(fileName);
+                add(fileName);
                 break;
             case "commit":
+                if (args.length == 1) {
+                    System.out.println("Please enter a commit message.");
+                    break;
+                }
                 String message = args[1];
-                // commit(message);
+                commit(message);
                 break;
             case "rm":
                 String filename = args[1];
-                // commit(filename);
+                remove(filename);
                 break;
             case "log":
                 log();
@@ -49,11 +54,11 @@ public class Gitlet {
                 status();
                 break;
             case "checkout":
-                // if (args.length == 3) {
-                //     checkout(args[2]);
-                // } else {
-                //     checkout(Integer.parseInt(args[2]), args[3]);
-                // }
+                if (args.length == 2) {
+                    checkout(args[1]);
+                } else {
+                    checkout(Integer.parseInt(args[1]), args[2]);
+                }
                 break;
             case "branch":
                 String branchName = args[1];
@@ -81,6 +86,7 @@ public class Gitlet {
                 break;
         }
         /** After main command has been run, serialize the commitTree object before closing */
+        Commit.serialize(commitTree);
     }
 
     /** Creates a new gitlet version control system in the current directory. This
@@ -98,16 +104,14 @@ public class Gitlet {
         // 1. Make the .gitlet directory
         File gitlet = new File(".gitlet");
         gitlet.mkdir();
-        File newestFiles = new File(".gitlet/latestVersion");
-        newestFiles.mkdir();
-        File pastFiles = new File(".gitlet/pastVersions");
-        pastFiles.mkdir();
         // 2. Blank commit with message 'initial commit'
         commitTree = new Commit();
         commitTree.setDefBranch("master");
         String initCommitMessage = "initial commit";
         CommitBody init = new CommitBody(initCommitMessage);
         init.updateCommitID(commitTree.getLatestCommitID());
+        File newCommitDir = new File(".gitlet/commit_0");
+        newCommitDir.mkdir();
         commitTree.addBranch(commitTree.getDefBranch(), init);
         commitTree.addCommit(initCommitMessage, init);
         commitTree.initializeAddRemove(init);
@@ -125,11 +129,36 @@ public class Gitlet {
             System.out.println("File does not exist.");
             return;
         }
-        if (/* file has not been modified since last commit */ true) {
-            System.out.println("File has not been modified since the last commit.");
+        // Check if file existed in a previous commit
+        int previousID = commitTree.getLatestVersion(filename);
+        if (previousID == -1) {
+            commitTree.stageFile(filename, commitTree.getBody(commitTree.getDefBranch()));
             return;
         }
-        commitTree.stageFile(filename);
+        // Get the previous version of the file
+        String pathway = ".gitlet/commit_" + previousID + "/" + filename;
+        File previous = new File(pathway);
+        // Create 2 input streams and compare the bytes
+        try {
+            FileInputStream curr = new FileInputStream(addF);
+            FileInputStream prev = new FileInputStream(previous);
+            boolean diff = false;
+            while (curr.available() > 0 && prev.available() > 0) {
+                int cur = curr.read();
+                int prv = prev.read();
+                if (cur != prv) {
+                    diff = true;
+                    break;
+                }
+            }
+            boolean notModified = !diff && curr.available() == 0 && prev.available() == 0;
+            if (notModified) {
+                System.out.println("File has not been modified since the last commit.");
+                return;
+            }
+        } catch (IOException e) {}
+
+        commitTree.stageFile(filename, commitTree.getBody(commitTree.getDefBranch()));
     }
 
     /** Saves a snapshot of certain files that can be viewed or restored later. Two
@@ -138,7 +167,7 @@ public class Gitlet {
       * 
       * Runtime: Should be constant with respect to any measure of number of commits. */
     public static void commit(String message) {
-        if (/* no files have been staged or marked for removal */ true) {
+        if (commitTree.getAddFiles().size() == 0 && commitTree.getRemoveFiles().size() == 0) {
             System.out.println("No changes added to the commit.");
             return;
         }
@@ -149,15 +178,16 @@ public class Gitlet {
         // Set the previous of the new commit node
         CommitBody now = new CommitBody(message, commitTree.getBody(commitTree.getDefBranch()));
         now.updateCommitID(commitTree.getLatestCommitID());
-        commitTree.updateCommitFiles(now);
-        commitTree.addCommit(message, now);
+        String dirName = ".gitlet/commit_" + now.getCommitID();
+        File newCommitDir = new File(dirName);
+        newCommitDir.mkdir();
         // Figure out where to add the commit to the commit node
-
+        // Add files to .gitlet folder
+        commitTree.updateCommitFiles(now, newCommitDir);
+        commitTree.addCommit(message, now);
         // Update the head pointer (branches) to newest value
         commitTree.setBranchToCommit(now);
         commitTree.addCommit(message, now);
-        // ADD FILES TO ACTUAl .GITLET FOLDER
-        
     }
 
     /** Mark the file for removal. This means that it will not be inherited as
@@ -201,9 +231,7 @@ public class Gitlet {
             String timeOfCommit = dateTime.format(head.getDate());
             System.out.println(timeOfCommit);
             System.out.println(head.message());
-            if (head.getCommitID() != 0) {
-               System.out.println();
-            }
+            System.out.println();
             head = head.getPast();
         }
     }
@@ -214,20 +242,30 @@ public class Gitlet {
       * Runtime: Linear with respect to the number of commits ever made */
     public static void globalLog() {
         ArrayList<CommitBody> completed = new ArrayList<CommitBody>();
-        for (String branchName : commitTree.getAllBranches()) {
-            CommitBody head = commitTree.getBody(commitTree.getDefBranch());
-            while (head != null && !completed.contains(head)) {
-                System.out.println("====");
-                System.out.println("Commit " + head.getCommitID() + ".");
-                SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
-                String timeOfCommit = dateTime.format(head.getDate());
-                System.out.println(timeOfCommit);
-                System.out.println(head.message());
-                if (head.getCommitID() != 0) {
-                   System.out.println();
-                }
-                head = head.getPast();
-            }
+        // for (String branchName : commitTree.getAllBranches()) {
+        //     CommitBody head = commitTree.getBody(branchName);
+        //     while (head != null && !completed.contains(head)) {
+        //         System.out.println("====");
+        //         System.out.println("Commit " + head.getCommitID() + ".");
+        //         SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
+        //         String timeOfCommit = dateTime.format(head.getDate());
+        //         System.out.println(timeOfCommit);
+        //         System.out.println(head.message());
+        //         System.out.println();
+        //         completed.add(head);
+        //         head = head.getPast();
+        //     }
+        // }
+        for (int commitID : commitTree.getEachCommit().keySet()) {
+            CommitBody head = commitTree.getEachCommit().get(commitID);
+            System.out.println("====");
+            System.out.println("Commit " + commitID + ".");
+            SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
+            String timeOfCommit = dateTime.format(head.getDate());
+            System.out.println(timeOfCommit);
+            System.out.println(head.message());
+            System.out.println();
+            head = head.getPast();
         }
     }
 
@@ -283,6 +321,7 @@ public class Gitlet {
         for (String filename : commitTree.getRemoveFiles()) {
             System.out.println(filename);
         }
+        System.out.println();
     }
 
     /** Restores the given file in the working directory to its state at the commit at
@@ -290,17 +329,39 @@ public class Gitlet {
       * 
       * Runtime: Should be linear to the size of the file being checked out. */
     public static void checkout(String filename) {
-        if (/*allBranches.contains(filename)*/ true) {
+        if (commitTree.getAllBranches().contains(filename)) {
             checkoutBranch(filename);
             return;
         }
-        if (/** file does not exist in the previous commit */ true) {
+        CommitBody currCommit = commitTree.getBody(commitTree.getDefBranch());
+        boolean inAdd = currCommit.getStringAddedFiles().contains(filename);
+        boolean inHerit = currCommit.getInherits().containsKey(filename);
+        if (!inAdd && !inHerit) {
             String m = "File does not exist in the most recent commit, or no such branch exists.";
             System.out.println(m);
             return;
         }
-        /** DO THIS - Restore given file in the working directory to its state at the commit at
-          * the head of the current branch */
+        restore(currCommit, currCommit.getCommitID(), filename);
+    }
+
+    /** Restores the version of the file */
+    private static void restore(CommitBody curr, int commitID, String filename) {
+        File file = new File(filename);
+        File pastVersion;
+        if (curr.getStringAddedFiles().contains(filename)) {
+            pastVersion = new File(".gitlet/commit_" + commitID + "/" + filename);
+        } else {
+            ArrayList<Integer> pastCommits = curr.getInherits().get(filename);
+            int lastID = pastCommits.get(pastCommits.size() - 1);
+            String path = ".gitlet/commit_" + lastID + "/" + filename;
+            pastVersion = new File(path);
+        }
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            Files.copy(pastVersion.toPath(), new File(filename).toPath());
+        } catch (IOException m) {} 
     }
 
     /** Restores the given file in the working directory to its state at the given
@@ -308,14 +369,18 @@ public class Gitlet {
       * 
       * Runtime: Should be linear to the size of the file being checked out. */
     public static void checkout(int commitID, String filename) {
-        if (commitID >= commitTree.getID()) {
+        if (!commitTree.getEachCommit().containsKey(commitID)) {
             System.out.println("No commit with that id exists.");
             return;
         }
-        if (/** the file does not exist in the given commit */ true) {
+        CommitBody commitWithID = commitTree.getEachCommit().get(commitID);
+        boolean inAdd = commitWithID.getStringAddedFiles().contains(filename);
+        boolean inHerit = commitWithID.getInherits().containsKey(filename);
+        if (!inAdd && !inHerit) {
             System.out.println("File does not exist in that commit.");
             return;
         }
+        restore(commitWithID, commitID, filename);
     }
 
     /** Restores all files in the working directory to their versions in the commit
@@ -326,14 +391,36 @@ public class Gitlet {
       * commit's snapshot. Should be constant with respect to any measure involving
       * number of commits. Should be constant with respect to the number of branches. */
     public static void checkoutBranch(String branchName) {
-        if (/** no branch with that name exists */ 1 == 2) {
+        if (!commitTree.getAllBranches().contains(branchName)) {
             String m = "File does not exist in the most recent commit, or no such branch exists.";
             System.out.println(m);
-        } else if (/** that branch is the current branch */ true) {
+        } else if (branchName.equals(commitTree.getDefBranch())) {
             System.out.println("No need to checkout the current branch.");
         }
         /** DO THIS - Restore all files in the working directory to their states at the commit at
           * the head of the given branch. Make given branch the current branch. */
+        CommitBody branchCommit = commitTree.getBody(branchName);
+        int id = branchCommit.getCommitID();
+        for (String filename : branchCommit.getInheritedPlusAdd().keySet()) {
+            File file = new File(filename);
+            File pastVersion;
+            if (branchCommit.getStringAddedFiles().contains(filename)) {
+                pastVersion = new File(".gitlet/commit_" + id + "/" + filename);
+            } else {
+                ArrayList<Integer> pastCommits = branchCommit.getInherits().get(filename);
+                int lastID = pastCommits.get(pastCommits.size() - 1);
+                String path = ".gitlet/commit_" + lastID + "/" + filename;
+                pastVersion = new File(path);
+            }
+            if (file.exists()) {
+                file.delete();
+            }
+            try {
+                Files.copy(pastVersion.toPath(), new File(filename).toPath());
+            } catch (IOException m) {} 
+        }
+        // Set branch to be the current branch. */
+        commitTree.setDefBranch(branchName);
     }
 
     /** Creates a new branch with the given name. (A branch is nothing more than
