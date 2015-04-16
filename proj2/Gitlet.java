@@ -174,7 +174,22 @@ public class Gitlet {
       * 
       * Runtime: Should be constant with respect to any measure of number of commits. */
     public static void commit(String message) {
-        if (commitTree.getAddFiles().size() == 0 && commitTree.getRemoveFiles().size() == 0) {
+        int countAdded = 0;
+        for (String name : commitTree.getAddFiles()) {
+            int prevID = commitTree.getLatestVersion(name);
+            if (prevID == -1) {
+                countAdded += 1;
+                continue;
+            }
+            if (notSame(name, prevID)) {
+                // Keep it inside added files (to be committed)
+                countAdded += 1;
+            } else {
+                commitTree.getAddFiles().remove(name);
+            }
+        }
+        boolean val = commitTree.getAddFiles().size() == 0 && commitTree.getRemoveFiles().size() == 0;
+        if (val || countAdded == 0) {
             System.out.println("No changes added to the commit.");
             return;
         }
@@ -195,6 +210,33 @@ public class Gitlet {
         // Update the head pointer (branches) to newest value
         commitTree.setBranchToCommit(now);
         commitTree.addCommit(message, now);
+    }
+
+    /** Checks to see if there are any files in Added Files that have not been modified since the
+      * last commit. */
+    private static boolean notSame(String filename, int id) {
+        // Get the previous version of the file
+        String pathway = ".gitlet/commit_" + id + "/" + filename;
+        File previous = new File(pathway);
+        File current = new File(filename);
+        // Create 2 input streams and compare the bytes
+        try {
+            FileInputStream curr = new FileInputStream(current);
+            FileInputStream prev = new FileInputStream(previous);
+            while (curr.available() > 0 && prev.available() > 0) {
+                int cur = curr.read();
+                int prv = prev.read();
+                if (cur != prv) {
+                    return true;
+                }
+            }
+            if (curr.available() > 0 || prev.available() > 0) {
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /** Mark the file for removal. This means that it will not be inherited as
