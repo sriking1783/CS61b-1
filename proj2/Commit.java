@@ -190,13 +190,9 @@ public class Commit implements Serializable {
         String path = core;
         for (int counts = 0; counts < splitName.length - 1; counts++) {
             path = path + splitName[counts] + "/";
-            System.out.println(splitName[counts]);
-            System.out.println("hiiiiii");
-            System.out.println(path);
             File dir = new File(path);
             dir.mkdir();
         }
-        System.out.println(path + splitName[splitName.length - 1]);
         return path + splitName[splitName.length - 1];
     }
 
