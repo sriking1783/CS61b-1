@@ -136,11 +136,13 @@ public class CommitBody implements Serializable {
     /** Adds the file to the current CommitBody. */
     public void addToCommit(File file) {
         filesInCommit.add(file);
-        listFilesInCommit.add(file.getName());
-        if (!inheritedPlusAdded.containsKey(file.getName())) {
+        listFilesInCommit.add(file.getPath());
+        // System.out.println(file.getName());
+        // System.out.println(file.getPath());
+        if (!inheritedPlusAdded.containsKey(file.getPath())) {
             ArrayList<Integer> idList = new ArrayList<Integer>();
-            inheritedPlusAdded.put(file.getName(), idList);
+            inheritedPlusAdded.put(file.getPath(), idList);
         }
-        inheritedPlusAdded.get(file.getName()).add(commitID);
+        inheritedPlusAdded.get(file.getPath()).add(commitID);
     }
 }

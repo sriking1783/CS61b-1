@@ -162,23 +162,24 @@ public class Commit implements Serializable {
     public void updateCommitFiles(CommitBody newCommit, File directory) {
         for (String name : addFiles) {
             File file = new File(name);
-            if (file.exists()) {
+            // System.out.println(file);
+            // if (file.exists()) {
                 newCommit.addToCommit(file);
                 if (latestVersions.containsKey(name)) {
                     latestVersions.remove(name);
                 }
                 latestVersions.put(name, newCommit.getCommitID());
                 // Move files to Commit_#id file
-                String corePath = ".gitlet/" + directory.getName() + "/";
+                String corePath = ".gitlet/commit_" + newCommit.getCommitID() + "/";
                 String thePathname = corePath + file.getName();
                 String actualFile = makeApprDirs(corePath, name);
-                File newFile = new File(thePathname);
+                File newFile = new File(actualFile);
                 try {
                     Files.copy(file.toPath(), newFile.toPath());
                 } catch (IOException m) {
                     m.printStackTrace();
                 }
-            }
+            // }
         }
         filesByCommit.put(newCommit.getCommitID(), newCommit.getAddedFiles());
         addFiles = new HashSet<String>();
@@ -188,7 +189,7 @@ public class Commit implements Serializable {
     private String makeApprDirs(String core, String pathname) {
         String[] splitName = pathname.split("/");
         String path = core;
-        for (int counts = 0; counts < splitName.length - 1; counts++) {
+        for (int counts = 0; counts < splitName.length - 1; counts += 1) {
             path = path + splitName[counts] + "/";
             File dir = new File(path);
             dir.mkdir();
