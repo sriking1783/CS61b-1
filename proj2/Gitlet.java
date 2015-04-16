@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Scanner;
 import java.util.HashMap;
 import java.io.File;
 
@@ -11,31 +12,28 @@ public class Gitlet {
     /** After deserialization, returns the latest commit object. (Can make this variable static
       * because it does not make a difference in the long run, due to deserialization process.) */
     private static Commit commitTree;
+    private static String dangMsg = "Warning: The command you entered may alter the files in your"
+                    + " working directory. Uncommitted changes may be lost. Are you sure you want"
+                    + " to continue? (yes/no)";
 
     public static void main(String[] args) {
-        // Deserialize, then mark the commit as the private var
         commitTree = Commit.deserialize();
-
-        String initArg = args[0];
-        switch (initArg) {
+        switch (args[0]) {
             case "init":
                 initialize();
                 break;
             case "add":
-                String fileName = args[1];
-                add(fileName);
+                add(args[1]);
                 break;
             case "commit":
                 if (args.length == 1) {
                     System.out.println("Please enter a commit message.");
                     break;
                 }
-                String message = args[1];
-                commit(message);
+                commit(args[1]);
                 break;
             case "rm":
-                String filename = args[1];
-                remove(filename);
+                remove(args[1]);
                 break;
             case "log":
                 log();
@@ -44,48 +42,56 @@ public class Gitlet {
                 globalLog();
                 break;
             case "find":
-                String commit = args[1];
-                find(commit);
+                find(args[1]);
                 break;
             case "status":
                 status();
                 break;
             case "checkout":
-                if (args.length == 2) {
-                    checkout(args[1]);
-                } else {
-                    checkout(Integer.parseInt(args[1]), args[2]);
+                if (answer().equals("yes")) {
+                    if (args.length == 2) {
+                        checkout(args[1]);
+                    } else {
+                        checkout(Integer.parseInt(args[1]), args[2]);
+                    }
                 }
                 break;
             case "branch":
-                String branchName = args[1];
-                branch(branchName);
+                branch(args[1]);
                 break;
             case "rm-branch":
-                String branchname = args[1];
-                removeBranch(branchname);
+                removeBranch(args[1]);
                 break;
             case "reset":
-                int commitID = Integer.parseInt(args[1]);
-                // reset(commitID);
+                if (answer().equals("yes")) {
+                    reset(Integer.parseInt(args[1]));
+                }
                 break;
             case "merge":
-                String nameBranch = args[1];
-                // merge(nameBranch);
+                if (answer().equals("yes")) {
+                    merge(args[1]);
+                }
                 break;
             case "rebase":
-                String nameOfBranch = args[1];
-                // rebase(nameOfBranch);
+                if (answer().equals("yes")) {
+                    rebase(args[1]);
+                }
                 break;
             case "i-rebase":
-                String branchsName = args[1];
-                // interactiveRebase(branchsName);
+                if (answer().equals("yes")) {
+                    interactiveRebase(args[1]);
+                }
                 break;
             default:
                 break;
         }
-        /** After main command has been run, serialize the commitTree object before closing */
         Commit.serialize(commitTree);
+    }
+
+    private static String answer() {
+        Scanner in = new Scanner(System.in);
+        System.out.println(dangMsg);
+        return in.nextLine();
     }
 
     /** Creates a new gitlet version control system in the current directory. This
@@ -243,20 +249,6 @@ public class Gitlet {
       * Runtime: Linear with respect to the number of commits ever made */
     public static void globalLog() {
         ArrayList<CommitBody> completed = new ArrayList<CommitBody>();
-        // for (String branchName : commitTree.getAllBranches()) {
-        //     CommitBody head = commitTree.getBody(branchName);
-        //     while (head != null && !completed.contains(head)) {
-        //         System.out.println("====");
-        //         System.out.println("Commit " + head.getCommitID() + ".");
-        //         SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
-        //         String timeOfCommit = dateTime.format(head.getDate());
-        //         System.out.println(timeOfCommit);
-        //         System.out.println(head.message());
-        //         System.out.println();
-        //         completed.add(head);
-        //         head = head.getPast();
-        //     }
-        // }
         for (int commitID : commitTree.getEachCommit().keySet()) {
             CommitBody head = commitTree.getEachCommit().get(commitID);
             System.out.println("====");
@@ -466,9 +458,35 @@ public class Gitlet {
       * commit's snapshot. Should be constant with respect to any measure involving
       * number of commits. */
     public static void reset(int commitID) {
-        if (/** no commits with the given id exist */ true) {
+        if (!commitTree.getEachCommit().containsKey(commitID)) {
             System.out.println("No commit with that id exists.");
+            return;
         }
+        CommitBody branchCommit = commitTree.getEachCommit().get(commitID);
+        System.out.println(branchCommit);
+        for (String filename : branchCommit.getInheritedPlusAdd().keySet()) {
+            File file = new File(filename);
+            File pastVersion;
+            if (branchCommit.getStringAddedFiles().contains(filename)) {
+                pastVersion = new File(".gitlet/commit_" + commitID + "/" + filename);
+            } else {
+                ArrayList<Integer> pastCommits = branchCommit.getInherits().get(filename);
+                int lastID = pastCommits.get(pastCommits.size() - 1);
+                String path = ".gitlet/commit_" + lastID + "/" + filename;
+                pastVersion = new File(path);
+            }
+            if (file.exists()) {
+                file.delete();
+            }
+            try {
+                Files.copy(pastVersion.toPath(), new File(filename).toPath());
+            } catch (IOException m) {
+                m.printStackTrace();
+            }
+        }
+        // Set the current branch's head to be new commit. */
+        commitTree.setBranchToCommit(branchCommit);
+        System.out.println(commitTree.getBody(commitTree.getDefBranch()));
     }
 
     /** Merges files from the head of the given brnch into the head of the current

@@ -162,8 +162,7 @@ public class Commit implements Serializable {
     public void updateCommitFiles(CommitBody newCommit, File directory) {
         for (String name : addFiles) {
             File file = new File(name);
-            // System.out.println(file);
-            // if (file.exists()) {
+            if (file.exists()) {
                 newCommit.addToCommit(file);
                 if (latestVersions.containsKey(name)) {
                     latestVersions.remove(name);
@@ -179,7 +178,7 @@ public class Commit implements Serializable {
                 } catch (IOException m) {
                     m.printStackTrace();
                 }
-            // }
+            }
         }
         filesByCommit.put(newCommit.getCommitID(), newCommit.getAddedFiles());
         addFiles = new HashSet<String>();

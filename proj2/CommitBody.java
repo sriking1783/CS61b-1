@@ -11,9 +11,6 @@ public class CommitBody implements Serializable {
 
     /** Used to keep track of previous commit messages */
     private CommitBody past;
-    /** Used to keep track of next commit messages (in case head pointer is shifted back).
-      * Reason why we use ArrayList, is because there can be more than one future. */
-    private ArrayList<CommitBody> future;
     /** Message that represents each commit. */
     private String message;
     /** Keeps track of the commitID for each commit (different for each body, so it should not
@@ -44,7 +41,6 @@ public class CommitBody implements Serializable {
     public CommitBody(String msg, CommitBody prev, ArrayList<CommitBody> next) {
         message = msg;
         past = prev;
-        future = next;
         commitTime = new Date();
         if (past != null && past.inheritedPlusAdded != null) {
             this.inheritedFiles = new HashMap<String, ArrayList<Integer>>(past.inheritedPlusAdded);
@@ -56,7 +52,6 @@ public class CommitBody implements Serializable {
     public CommitBody(String msg, CommitBody prev) {
         message = msg;
         past = prev;
-        future = null;
         commitTime = new Date();
         if (past != null && past.inheritedPlusAdded != null) {
             this.inheritedFiles = new HashMap<String, ArrayList<Integer>>(past.inheritedPlusAdded);
@@ -67,7 +62,6 @@ public class CommitBody implements Serializable {
     public CommitBody(String msg) {
         message = msg;
         past = null;
-        future = null;
         commitTime = new Date();
         if (past != null && past.inheritedPlusAdded != null) {
             this.inheritedFiles = new HashMap<String, ArrayList<Integer>>(past.inheritedPlusAdded);
@@ -137,8 +131,6 @@ public class CommitBody implements Serializable {
     public void addToCommit(File file) {
         filesInCommit.add(file);
         listFilesInCommit.add(file.getPath());
-        // System.out.println(file.getName());
-        // System.out.println(file.getPath());
         if (!inheritedPlusAdded.containsKey(file.getPath())) {
             ArrayList<Integer> idList = new ArrayList<Integer>();
             inheritedPlusAdded.put(file.getPath(), idList);
