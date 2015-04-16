@@ -276,7 +276,7 @@ public class Gitlet {
         while (head != null) {
             System.out.println("====");
             System.out.println("Commit " + head.getCommitID() + ".");
-            SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
+            SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
             String timeOfCommit = dateTime.format(head.getDate());
             System.out.println(timeOfCommit);
             System.out.println(head.message());
@@ -295,7 +295,7 @@ public class Gitlet {
             CommitBody head = commitTree.getEachCommit().get(commitID);
             System.out.println("====");
             System.out.println("Commit " + commitID + ".");
-            SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd KK:mm:ss");
+            SimpleDateFormat dateTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
             String timeOfCommit = dateTime.format(head.getDate());
             System.out.println(timeOfCommit);
             System.out.println(head.message());
@@ -538,11 +538,48 @@ public class Gitlet {
       * Should also be linear in terms of the total size of new files added to commits
       * in each branch. */
     public static void merge(String branchName) {
-        if (/** branch with the given name does not exist */ 1 == 5) {
+        if (!commitTree.getAllBranches().contains(branchName)) {
             System.out.println("A branch with that name does not exist.");
-        } else if (/** attempting to merge a branch with itself */ true) {
+        } else if (branchName.equals(commitTree.getDefBranch())) {
             System.out.println("Cannot merge a branch with itself.");
         }
+        // CommitBody branch = commitTree.getBody(branchName);
+        // CommitBody current = commitTree.getBody(commitTree.getDefBranch());
+        // // Find common split point
+        // HashSet<Integer> possibleNodes = new HashSet<Integer>();
+        // int splitID = Math.max(current.getCommitID(), branch.getCommitID());
+        // possibleNodes.add(splitID);
+        // for (int i = current.getCommitID(); branch.getHistory.contains(i); i--) {
+        //     possibleNodes.add(i);
+        //     // if (branch.getHistory().contains(numID)) {
+        //     //     if (numID > splitID) {
+        //     //         splitID = numID;
+        //     //     }
+        //     // }
+        // }
+        // // Go through all files
+        // ArrayList<Integer> subCurrHist = current.getHistory().keySet.retainAll(possibleNodes);
+        // ArrayList<Integer> subBranHist = branch.getHistory().keySet.retainAll(possibleNodes);
+        // ArrayList<String> counter = new ArrayList<String>();
+        // for (String file : current.getInheritedPlusAdd().keySet()) {
+        //     // if ()
+        //     ArrayList<Integer> subCurrInherit
+        //         = current.getInheritedPlusAdd().get(file).keySet.retainAll(possibleNodes);
+        //     ArrayList<Integer> subBranInherit
+        //         = branch.getInheritedPlusAdd().get(file).keySet.retainAll(possibleNodes);
+        //     if (!branch.getInheritedPlusAdd().contains(file)) {
+                
+        //     }
+        //     // ArrayList<Integer> latest = current.getInheritedPlusAdd().get(file);
+        //     // if (latest.get(latest.size - 1) > splitID) {
+
+        //     // }
+        // }
+        // for (String file : branch.getInheritedPlusAdd().keySet()) {
+        //     if (counter.contains(file)) {
+        //         continue;
+        //     }
+        // }
     }
 
     /** Conceptually, finds the split point of the current branch and the given branch,

@@ -35,18 +35,10 @@ public class CommitBody implements Serializable {
     /** Temporarily stores any mappings that are removed from inheritedPlusAdded; incase we need to
       * re-add the object, simply copy the mapping from here to the other map. */
     private HashMap<String, ArrayList<Integer>> temp = new HashMap<String, ArrayList<Integer>>();
+    /** Keeps track of all of the history of the branch */
+    private ArrayList<Integer> historyNodes = new ArrayList<Integer>();
 
     /********** CONSTRUCTORS **********/
-
-    public CommitBody(String msg, CommitBody prev, ArrayList<CommitBody> next) {
-        message = msg;
-        past = prev;
-        commitTime = new Date();
-        if (past != null && past.inheritedPlusAdded != null) {
-            this.inheritedFiles = new HashMap<String, ArrayList<Integer>>(past.inheritedPlusAdded);
-            inheritedPlusAdded = new HashMap<String, ArrayList<Integer>>(this.inheritedFiles);
-        }
-    }
 
     /** Most commits will be of this form (unless revert is called) */
     public CommitBody(String msg, CommitBody prev) {
@@ -56,6 +48,7 @@ public class CommitBody implements Serializable {
         if (past != null && past.inheritedPlusAdded != null) {
             this.inheritedFiles = new HashMap<String, ArrayList<Integer>>(past.inheritedPlusAdded);
             inheritedPlusAdded = new HashMap<String, ArrayList<Integer>>(this.inheritedFiles);
+            historyNodes = new ArrayList<Integer>(past.historyNodes);
         }
     }
 
@@ -66,10 +59,21 @@ public class CommitBody implements Serializable {
         if (past != null && past.inheritedPlusAdded != null) {
             this.inheritedFiles = new HashMap<String, ArrayList<Integer>>(past.inheritedPlusAdded);
             inheritedPlusAdded = new HashMap<String, ArrayList<Integer>>(this.inheritedFiles);
+            historyNodes = new ArrayList<Integer>(past.historyNodes);
         }
     }
 
     /********** METHODS **********/
+
+    /** Adds the current node to history */
+    public void addHistory() {
+        historyNodes.add(commitID);
+    }
+
+    /** Returns the history of the node. */
+    public ArrayList<Integer> getHistory(){
+        return historyNodes;
+    }
 
     /** Used to get all inherited files (primarily from past commit) */
     public HashMap<String, ArrayList<Integer>> getInherits() {
@@ -115,6 +119,7 @@ public class CommitBody implements Serializable {
     /** Establishes the commitID value as idNumber. Only call this method once per commit. */
     public void updateCommitID(int idNumber) {
         commitID = idNumber;
+        addHistory();
     }
 
     /** Returns the ID number for this commit. */
