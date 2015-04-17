@@ -540,8 +540,10 @@ public class Gitlet {
     public static void merge(String branchName) {
         if (!commitTree.getAllBranches().contains(branchName)) {
             System.out.println("A branch with that name does not exist.");
+            return;
         } else if (branchName.equals(commitTree.getDefBranch())) {
             System.out.println("Cannot merge a branch with itself.");
+            return;
         }
         // CommitBody branch = commitTree.getBody(branchName);
         // CommitBody current = commitTree.getBody(commitTree.getDefBranch());
@@ -595,12 +597,16 @@ public class Gitlet {
       * to the given branch. Also, rebase should not need to make any additional backup
       * copies of files. */
     public static void rebase(String branchName) {
-        if (/** branch with given name does not exist */ 1 == 6) {
+        if (!commitTree.getAllBranches().contains(branchName)) {
             System.out.println("A branch with that name does not exist.");
-        } else if (/* given branch is same as the current branch name */ 2 == 4) {
+            return;
+        } else if (commitTree.getDefBranch().equals(branchName)) {
             System.out.println("Cannot rebase a branch onto itself.");
-        } else if (/* input branch's head is in teh history of the current branch's head */ true) {
+            return;
+        } else if (commitTree.getBody(branchName).getCommitID()
+            < commitTree.getBody(commitTree.getDefBranch()).getCommitID()) {
             System.out.println("Already up-to-date.");
+            return;
         }
     }
 
@@ -620,12 +626,16 @@ public class Gitlet {
       * 
       * Runtime: Should be no different than rebase along any significant measure. */
     public static void interactiveRebase(String branchName) {
-        if (/** branch with given name does not exist */ 1 == 6) {
+        if (!commitTree.getAllBranches().contains(branchName)) {
             System.out.println("A branch with that name does not exist.");
-        } else if (/* given branch is same as the current branch name */ 2 == 4) {
+            return;
+        } else if (commitTree.getDefBranch().equals(branchName)) {
             System.out.println("Cannot rebase a branch onto itself.");
-        } else if (/* input branch's head is in teh history of the current branch's head */ true) {
+            return;
+        } else if (commitTree.getBody(branchName).getCommitID()
+            < commitTree.getBody(commitTree.getDefBranch()).getCommitID()) {
             System.out.println("Already up-to-date.");
+            return;
         }
     }
 }
