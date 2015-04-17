@@ -188,7 +188,8 @@ public class Gitlet {
                 commitTree.getAddFiles().remove(name);
             }
         }
-        boolean val = commitTree.getAddFiles().size() == 0 && commitTree.getRemoveFiles().size() == 0;
+        boolean val = commitTree.getAddFiles().size() == 0
+                && commitTree.getRemoveFiles().size() == 0;
         if (val || countAdded == 0) {
             System.out.println("No changes added to the commit.");
             return;

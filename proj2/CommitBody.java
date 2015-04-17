@@ -71,7 +71,7 @@ public class CommitBody implements Serializable {
     }
 
     /** Returns the history of the node. */
-    public ArrayList<Integer> getHistory(){
+    public ArrayList<Integer> getHistory() {
         return historyNodes;
     }
 
