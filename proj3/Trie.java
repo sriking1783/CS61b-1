@@ -18,7 +18,7 @@ public class Trie {
     /** Represents each node within the Trie. (Implementation taken from lecture slides).
       * Note: Using a TreeMap implementation because it was recommended to save memory, even
       * though it may be slightly less efficient. */
-    private class Node {
+    public class Node {
         boolean exists;
         Map<Character, Node> links;
 
