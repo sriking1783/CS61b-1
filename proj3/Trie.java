@@ -1,4 +1,3 @@
-import java.util.Map;
 import java.util.TreeMap;
 /**
  * Prefix-Trie. Supports linear time find() and insert(). 
@@ -13,12 +12,12 @@ import java.util.TreeMap;
 public class Trie {
 
     /** Keeps track of the root note in the Trie. */
-    private Node pointer = new Node();
+    public Node pointer = new Node();
 
     /** Represents each node within the Trie. (Implementation taken from lecture slides).
       * Note: Using a TreeMap implementation because it was recommended to save memory, even
       * though it may be slightly less efficient. */
-    private class Node {
+    public class Node {
         boolean exists;
         TreeMap<Character, Node> links;
 
@@ -32,7 +31,24 @@ public class Trie {
       * O(N) time. If isFullWord is false, then partial prefix matches should return true;
       * if isFullWord is true, then only full word matches should return true. */
     public boolean find(String s, boolean isFullWord) {
-        return true;
+        return find(pointer, s, isFullWord, 0);
+    }
+
+    /** Does the core functionality of find, but it takes into account the root node (so we
+      * can write the function recursively). */
+    private boolean find(Node root, String word, boolean isFullWord, int count) {
+        Character c = word.charAt(count);
+        if (!root.links.containsKey(c)) {
+            return false;
+        }
+        if (count == word.length() - 1) {
+            if (isFullWord) {
+                return root.links.get(c).exists;
+            }
+            return true;
+        }
+        return find(root.links.get(c), word, isFullWord, count + 1);
+        
     }
 
     /** Given some word s of length N, should add s to the Trie in O(N) time and space.
