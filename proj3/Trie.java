@@ -32,7 +32,7 @@ public class Trie {
       * O(N) time. If isFullWord is false, then partial prefix matches should return true;
       * if isFullWord is true, then only full word matches should return true. */
     public boolean find(String s, boolean isFullWord) {
-
+        return true;
     }
 
     /** Given some word s of length N, should add s to the Trie in O(N) time and space.
