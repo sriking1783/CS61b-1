@@ -18,7 +18,7 @@ public class Trie {
     /** Represents each node within the Trie. (Implementation taken from lecture slides).
       * Note: Using a TreeMap implementation because it was recommended to save memory, even
       * though it may be slightly less efficient. */
-    public class Node {
+    private class Node {
         boolean exists;
         Map<Character, Node> links;
 
@@ -67,17 +67,17 @@ public class Trie {
         // return root;
         char c = word.charAt(count);
         if (count == word.length() - 1) {
-            if (root.links.containsKey(c)) {
-                root.links.get(c).exists = true;
-            }
-            else {
+            if (!root.links.containsKey(c)) {
                 root.links.put(c, new Node());
                 root.links.get(c).exists = true;
             }
-        } else if (root.links.containsKey(c)) {
+            else {
+                root.links.get(c).exists = true;
+            }
+        } else if (!root.links.containsKey(c)) {
+            root.links.put(c, new Node());
             insert(root.links.get(c), word, count + 1);
         } else {
-            root.links.put(c, new Node());
             insert(root.links.get(c), word, count + 1);
         }
         return root;
