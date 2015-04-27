@@ -49,11 +49,11 @@ public class Trie {
       * that keeps track of the character number that we are currently on within the String. */
     private Node insert(Node root, String word, int count) {
         char c = word.charAt(count);
-        if (root == null) {
-            root = new Node();
-        }
+        // if (root == null) {
+        //     root = new Node();
+        // }
         if (root.links.containsKey(c)) {
-            return insert(root.links.get(c), word.substring(count + 1), count + 1);
+            return insert(root.links.get(c), word, count + 1);
         }
         root.links.put(c, new Node());
         if (count == word.length() - 1) {
@@ -62,7 +62,8 @@ public class Trie {
             return root;
         }
         // root.links.put(c, new Node());
-        root.links.put(c, insert(root.links.get(c), word, count + 1));
+        insert(root.links.get(c), word, count + 1);
+        // root.links.put(c, insert(new Node(), word, count + 1));
         return root;
     }
 }
