@@ -20,7 +20,7 @@ public class Trie {
       * though it may be slightly less efficient. */
     private class Node {
         boolean exists;
-        Map<Character, Node> links;
+        TreeMap<Character, Node> links;
 
         public Node() {
             links = new TreeMap<Character, Node>();
@@ -39,7 +39,7 @@ public class Trie {
       * (Note: or comparison, adding all prefixes of a String of length N to a hash table
       * takes expected O(N^2) time and space.) */
     public void insert(String s) {
-        if (s == null || s == "") {
+        if (s == null || s.equals("")) {
             throw new IllegalArgumentException();
         }
         insert(pointer, s, 0);
@@ -65,19 +65,19 @@ public class Trie {
         // }
         // insert(root.links.get(c), word, count + 1);
         // return root;
-        char c = word.charAt(count);
+        Character c = word.charAt(count);
         if (count == word.length() - 1) {
-            if (!root.links.containsKey(c)) {
-                root.links.put(c, new Node());
+            if (root.links.containsKey(c)) {
                 root.links.get(c).exists = true;
             }
             else {
+                root.links.put(c, new Node());
                 root.links.get(c).exists = true;
             }
-        } else if (!root.links.containsKey(c)) {
-            root.links.put(c, new Node());
+        } else if (root.links.containsKey(c)) { 
             insert(root.links.get(c), word, count + 1);
         } else {
+            root.links.put(c, new Node());
             insert(root.links.get(c), word, count + 1);
         }
         return root;
