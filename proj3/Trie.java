@@ -53,7 +53,11 @@ public class Trie {
         //     root = new Node();
         // }
         if (root.links.containsKey(c)) {
-            return insert(root.links.get(c), word, count + 1);
+            if (count != word.length() - 1) {
+                return insert(root.links.get(c), word, count + 1);
+            }
+            root.links.get(c).exists = true;
+            return root;
         }
         root.links.put(c, new Node());
         if (count == word.length() - 1) {
