@@ -54,10 +54,11 @@ public class Trie {
         // }
         if (root.links.containsKey(c)) {
             if (count != word.length() - 1) {
-                return insert(root.links.get(c), word, count + 1);
+                insert(root.links.get(c), word, count + 1);
+            } else {
+                root.links.get(c).exists = true;
+                return root;
             }
-            root.links.get(c).exists = true;
-            return root;
         }
         root.links.put(c, new Node());
         if (count == word.length() - 1) {
