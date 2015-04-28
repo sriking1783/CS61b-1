@@ -59,21 +59,28 @@ public class Trie {
             throw new IllegalArgumentException();
         }
         insert(pointer, s, 0);
-        // insertIter(pointer, s, 0);
     }
 
     /** Does the core functionality of insert, but also take in a Node object and the int
       * that keeps track of the character number that we are currently on within the String. */
     private Node insert(Node root, String word, int count) {
-        // char c = word.charAt(count);
-        // if (root.links.containsKey(c)) {
-        //     if (count != word.length() - 1) {
-        //         insert(root.links.get(c), word, count + 1);
-        //     } else {
-        //         root.links.get(c).exists = true;
-        //         return root;
-        //     }
-        // }
+        char c = word.charAt(count);
+        if (root.links.containsKey(c)) {
+            if (count != word.length() - 1) {
+                insert(root.links.get(c), word, count + 1);
+            } else {
+                root.links.get(c).exists = true;
+            }
+        }
+        else {
+            root.links.put(c, new Node());
+            if (count == word.length() - 1) {
+                root.links.get(c).exists = true;
+            } else {
+                insert(root.links.get(c), word, count + 1);
+            }
+        }
+        return root;
         // root.links.put(c, new Node());
         // if (count == word.length() - 1) {
         //     root.links.get(c).exists = true;
@@ -81,22 +88,23 @@ public class Trie {
         // }
         // insert(root.links.get(c), word, count + 1);
         // return root;
-        Character c = word.charAt(count);
-        if (count == word.length() - 1) {
-            if (root.links.containsKey(c)) {
-                root.links.get(c).exists = true;
-            }
-            else {
-                root.links.put(c, new Node());
-                root.links.get(c).exists = true;
-            }
-        } else if (root.links.containsKey(c)) { 
-            insert(root.links.get(c), word, count + 1);
-        } else {
-            root.links.put(c, new Node());
-            insert(root.links.get(c), word, count + 1);
-        }
-        return root;
+
+        // Character c = word.charAt(count);
+        // if (count == word.length() - 1) {
+        //     if (root.links.containsKey(c)) {
+        //         root.links.get(c).exists = true;
+        //     }
+        //     else {
+        //         root.links.put(c, new Node());
+        //         root.links.get(c).exists = true;
+        //     }
+        // } else if (root.links.containsKey(c)) { 
+        //     insert(root.links.get(c), word, count + 1);
+        // } else {
+        //     root.links.put(c, new Node());
+        //     insert(root.links.get(c), word, count + 1);
+        // }
+        // return root;
     }
 
     /** Does the core functionality of insert, through an iterative process */
