@@ -4,34 +4,34 @@ public class TrieTest {
 		test2();
 	}
 
-	public static void test1() {
-		Trie cicle = new Trie();
-		cicle.insert("hi");
-		// System.out.println(cicle.pointer.links);
-		// System.out.println(cicle.pointer.links.get('h').links);
+	// public static void test1() {
+	// 	Trie cicle = new Trie();
+	// 	cicle.insert("hi");
+	// 	// System.out.println(cicle.pointer.links);
+	// 	// System.out.println(cicle.pointer.links.get('h').links);
 
-		// for (Character c : cicle.pointer.links.keySet()) {
-		// 	System.out.println(c + ": " + cicle.pointer.links.get(c));
-		// }
-		// for (Character c : cicle.pointer.links.get('h').links.keySet()) {
-		// 	System.out.println(c + ": " + cicle.pointer.links.get('h').links.get(c));
-		// }
+	// 	// for (Character c : cicle.pointer.links.keySet()) {
+	// 	// 	System.out.println(c + ": " + cicle.pointer.links.get(c));
+	// 	// }
+	// 	// for (Character c : cicle.pointer.links.get('h').links.keySet()) {
+	// 	// 	System.out.println(c + ": " + cicle.pointer.links.get('h').links.get(c));
+	// 	// }
 
-		cicle.insert("hit");
-		System.out.println(cicle.pointer.links);
-		System.out.println(cicle.pointer.links.get('h').links);
-		System.out.println(cicle.pointer.links.get('h').links.get('i').links);
+	// 	cicle.insert("hit");
+	// 	System.out.println(cicle.pointer.links);
+	// 	System.out.println(cicle.pointer.links.get('h').links);
+	// 	System.out.println(cicle.pointer.links.get('h').links.get('i').links);
 
-		for (Character c : cicle.pointer.links.keySet()) {
-			System.out.println(c + ": " + cicle.pointer.links.get(c));
-		}
-		for (Character c : cicle.pointer.links.get('h').links.keySet()) {
-			System.out.println(c + ": " + cicle.pointer.links.get('h').links.get(c));
-		}
-		for (Character c : cicle.pointer.links.get('h').links.get('i').links.keySet()) {
-			System.out.println(c + ": " + cicle.pointer.links.get('h').links.get('i').links.get(c));
-		}
-	}
+	// 	for (Character c : cicle.pointer.links.keySet()) {
+	// 		System.out.println(c + ": " + cicle.pointer.links.get(c));
+	// 	}
+	// 	for (Character c : cicle.pointer.links.get('h').links.keySet()) {
+	// 		System.out.println(c + ": " + cicle.pointer.links.get('h').links.get(c));
+	// 	}
+	// 	for (Character c : cicle.pointer.links.get('h').links.get('i').links.keySet()) {
+	// 		System.out.println(c + ": " + cicle.pointer.links.get('h').links.get('i').links.get(c));
+	// 	}
+	// }
 
 	public static void test2() {
 	    Trie t = new Trie();

@@ -1,4 +1,5 @@
 import java.util.TreeMap;
+import java.util.Comparator;
 /**
  * Prefix-Trie. Supports linear time find() and insert(). 
  * Should support determining whether a word is a full word in the 
@@ -12,20 +13,11 @@ import java.util.TreeMap;
 public class Trie {
 
     /** Keeps track of the root note in the Trie. */
-    private Node pointer = new Node();
+    protected Node pointer;
 
-    /** Represents each node within the Trie. (Implementation taken from lecture slides).
-      * Note: Using a TreeMap implementation because it was recommended to save memory, even
-      * though it may be slightly less efficient. */
-    private class Node {
-        boolean exists;
-        TreeMap<Character, Node> links;
-
-        /** Constructor for the node class */
-        public Node() {
-            links = new TreeMap<Character, Node>();
-            exists = false;
-        }
+    /** Default constructor for the Trie class. */
+    public Trie() {
+        pointer = new Node();
     }
 
     /** 
@@ -44,12 +36,12 @@ public class Trie {
       * Does the core functionality of find, but it takes into account the root node (so we
       * can write the function recursively).
       * @param root : Keeps track of the root node (for recursive calls).
-      * @param s : word we want to check.
+      * @param word : word we want to check.
       * @param isFullWord : determines whether we should check for the whole or part of the word.
       * @param count : keeps track of the index in the word.
       * @return boolean : returns whether or not the word exists.
       */
-    private boolean find(Node root, String word, boolean isFullWord, int count) {
+    protected boolean find(Node root, String word, boolean isFullWord, int count) {
         Character c = word.charAt(count);
         if (!root.links.containsKey(c)) {
             return false;
@@ -81,12 +73,11 @@ public class Trie {
       * Does the core functionality of insert, but also take in a Node object and the int
       * that keeps track of the character number that we are currently on within the String.
       * @param root : Keeps track of the root node (for recursive calls).
-      * @param s : word we want to check.
-      * @param isFullWord : determines whether we should check for the whole or part of the word.
+      * @param word : word we want to check.
       * @param count : keeps track of the index in the word.
       * @return Node : returns the root node.
       */
-    private Node insert(Node root, String word, int count) {
+    protected Node insert(Node root, String word, int count) {
         char c = word.charAt(count);
         if (root.links.containsKey(c)) {
             if (count != word.length() - 1) {
