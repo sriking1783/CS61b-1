@@ -42,6 +42,9 @@ public class SortedTries extends Trie {
       */
     protected Node insert(Node root, String word, int count, ArrayList<Character> alphabet) {
         char c = word.charAt(count);
+        if (!alphabet.contains(c)) {
+            return root;
+        }
         if (root.links.containsKey(c)) {
             if (count != word.length() - 1) {
                 insert(root.links.get(c), word, count + 1, alphabet);
