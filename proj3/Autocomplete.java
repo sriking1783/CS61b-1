@@ -1,6 +1,13 @@
 import java.util.LinkedList;
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
+ * Throw an IllegalArgumentException whenever:
+ * 1) The length of the terms and weights arrays are different.
+ * 2) There are duplicate input terms.
+ * 3) There are negative weights.
+ * 4) Trying to find the k top matches for non-positive k.
+ * 
+ * @author Aditya Iyengar
  */
 public class Autocomplete {
     /**
@@ -9,6 +16,7 @@ public class Autocomplete {
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
+        
     }
 
     /**
