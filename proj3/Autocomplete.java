@@ -10,22 +10,40 @@ import java.util.LinkedList;
  * @author Aditya Iyengar
  */
 public class Autocomplete {
+
+    /** Acts are the core trie structure for this class. */
+    public TernaryST<Character> tst;
+
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
-        
+        tst = new TernaryST<Character>();
+        if (terms.length != weights.length) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = 0; i < terms.length; i++) {
+            if (tst.contains(terms[i])) {
+                throw new IllegalArgumentException();
+            } else {
+                tst.insert(terms[i], weights[i]);
+            }
+        }
     }
 
     /**
      * Find the weight of a given term. If it is not in the dictionary, return 0.0
-     * @param term
-     * @return
+     * @param term : the term we are trying to find the weight of.
+     * @return double : weight of the term.
      */
     public double weightOf(String term) {
-        return 0;
+        double weight = tst.findWeight(term);
+        if (weight < 0) {
+            throw new IllegalArgumentException(); 
+        }
+        return weight;
     }
 
     /**
@@ -45,6 +63,9 @@ public class Autocomplete {
      * @return
      */
     public Iterable<String> topMatches(String prefix, int k) {
+        if (k < 0) {
+            throw new IllegalArgumentException();
+        }
         return null;
     }
 
