@@ -90,7 +90,7 @@ public class TernaryST<V> {
       */
     protected double findWeight(TSTNode root, String word, int count) {
         char c = word.charAt(count);
-        if (root.character.equals(c)) {
+        if (root.character == c) {
             if (root.exists == true) {
                 return root.weight;
             }
@@ -130,7 +130,7 @@ public class TernaryST<V> {
         //     root.weight = wordWeight;
 
         // }
-        if (root.character.equals(c)) {
+        if (root.character == c) {
             if (count == word.length() - 1) {
                 root.exists = true;
                 root.maxWeight = wordWeight;
