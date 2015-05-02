@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.ArrayList;
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  * Throw an IllegalArgumentException whenever:
@@ -24,12 +25,16 @@ public class Autocomplete {
         if (terms.length != weights.length) {
             throw new IllegalArgumentException();
         }
+        ArrayList<String> completed = new ArrayList<String>();
         for (int i = 0; i < terms.length; i++) {
-            if (tst.contains(terms[i])) {
+            // if (tst.contains(terms[i])) {
+            //     throw new IllegalArgumentException();
+            // } else {
+            if (completed.contains(terms[i]) || weights[i] < 0) {
                 throw new IllegalArgumentException();
-            } else {
-                tst.insert(terms[i], weights[i]);
             }
+            completed.add(terms[i]);
+            tst.insert(terms[i], weights[i]);
         }
     }
 

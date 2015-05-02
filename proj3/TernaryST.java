@@ -43,33 +43,33 @@ public class TernaryST<V> {
         }
     }
 
-    /** Checks if the term is contained in the TST
-      * @param term : word we want to check.
-      * @return double : weight of the word.
-      */
-    public boolean contains(String term) {
-        return contains(root, term, 0);
-    }
+    // /** Checks if the term is contained in the TST
+    //   * @param term : word we want to check.
+    //   * @return double : weight of the word.
+    //   */
+    // public boolean contains(String term) {
+    //     return contains(root, term, 0);
+    // }
 
-    /** 
-      * Does the core functionality of contains and returns if the word exists.
-      * @param root : Keeps track of the root node (for recursive calls).
-      * @param word : word we want to check.
-      * @param count : keeps track of the index in the word.
-      * @return boolean : returns if the word exists in the tst.
-      */
-    protected boolean contains(TSTNode root, String word, int count) {
-        char c = word.charAt(count);
-        if (root.character.equals(c)) {
-            if (root.exists == true) {
-                return true;
-            }
-            return contains(root.middle, word, count + 1);
-        } else if (c < root.character) {
-            return contains(root.left, word, count);
-        }
-        return contains(root.right, word, count);
-    }
+    // /** 
+    //   * Does the core functionality of contains and returns if the word exists.
+    //   * @param root : Keeps track of the root node (for recursive calls).
+    //   * @param word : word we want to check.
+    //   * @param count : keeps track of the index in the word.
+    //   * @return boolean : returns if the word exists in the tst.
+    //   */
+    // protected boolean contains(TSTNode root, String word, int count) {
+    //     char c = word.charAt(count);
+    //     if (root.character.equals(c)) {
+    //         if (root.exists == true) {
+    //             return true;
+    //         }
+    //         return contains(root.middle, word, count + 1);
+    //     } else if (c < root.character) {
+    //         return contains(root.left, word, count);
+    //     }
+    //     return contains(root.right, word, count);
+    // }
 
     /**
       * Finds the weight of a given term in the TST.
