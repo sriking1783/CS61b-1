@@ -1,5 +1,3 @@
-import java.util.TreeMap;
-import java.util.Comparator;
 /**
  * Prefix-Trie. Supports linear time find() and insert(). 
  * Should support determining whether a word is a full word in the 
@@ -85,8 +83,7 @@ public class Trie {
             } else {
                 root.links.get(c).exists = true;
             }
-        }
-        else {
+        } else {
             root.links.put(c, new Node());
             if (count == word.length() - 1) {
                 root.links.get(c).exists = true;

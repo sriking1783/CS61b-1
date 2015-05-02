@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.TreeMap;
 /**
  * Alphabet Sorter: takes in a given alphabetical order and then
  * sorts words in the according format. 
@@ -13,6 +12,7 @@ import java.util.TreeMap;
  */
 public class AlphabetSort {
 
+    /** Does the core work of the AlphabetSort class. */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         if (!input.hasNext()) {
