@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Autocomplete {
 
     /** Acts are the core trie structure for this class. */
-    public TernaryST<Character> tst;
+    public TernaryST tst;
 
     /**
      * Initializes required data structures from parallel arrays.
@@ -21,15 +21,12 @@ public class Autocomplete {
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
-        tst = new TernaryST<Character>();
+        tst = new TernaryST();
         if (terms.length != weights.length) {
             throw new IllegalArgumentException();
         }
         ArrayList<String> completed = new ArrayList<String>();
         for (int i = 0; i < terms.length; i++) {
-            // if (tst.contains(terms[i])) {
-            //     throw new IllegalArgumentException();
-            // } else {
             if (completed.contains(terms[i]) || weights[i] < 0) {
                 throw new IllegalArgumentException();
             }
@@ -57,6 +54,8 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        // TSTNode prefixNode = tst.prefixNode(tst.root, prefix, 0);
+        // tst.prefixMatch(prefixNode, prefix, 0);
         return "";
     }
 
@@ -71,7 +70,9 @@ public class Autocomplete {
         if (k < 0) {
             throw new IllegalArgumentException();
         }
-        return null;
+        return tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
+            prefix.substring(0, prefix.length() - 1), new ArrayList<String>(), "",
+            new ArrayList<TSTNode>(), k);
     }
 
     /**
