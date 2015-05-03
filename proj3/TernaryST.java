@@ -34,150 +34,70 @@ public class TernaryST {
             @Override
             public int compare(TSTNode x1, TSTNode x2) {
                 if (x1.maxWeight < x2.maxWeight) {
-                    return -1;
+                    return 1;
                 } else if (x1.maxWeight == x2.maxWeight) {
                     return 0;
                 }
-                return 1;
+                return -1;
             }
         });
-        System.out.println("aaaaaaaa");
-        System.out.println(prefix);
-        System.out.println(prefixNode.character);
-        System.out.println();
+        // System.out.println("aaaaaaaa");
+        // System.out.println(prefix);
+        // System.out.println(prefixNode.character);
+        // System.out.println();
 
-        if (prefixNode.middle.character != null) {
+        if (prefixNode.middle != null) {
             // System.out.println(1);
-            letterChecker.add(prefixNode.middle);
-            // System.out.println(prefixNode.middle.character);
-            // System.out.println(prefixNode.middle.maxWeight);
+            // if (prefixNode.middle.middle != null) {
+                // System.out.println(2);
+                // System.out.println(prefixNode.character);
+                // System.out.println(prefixNode.middle.character);
+                // System.out.println(prefixNode.middle.middle.character);
+                letterChecker.add(prefixNode.middle);
+            // }
+            if (prefixNode.middle.left != null) {
+                // System.out.println(3);
+                // System.out.println(prefixNode.middle.left.character);
+                letterChecker.add(prefixNode.middle.left);
+            }
+            if (prefixNode.middle.right != null) {
+                // System.out.println(4);
+                // System.out.println(prefixNode.middle.right.character);
+                letterChecker.add(prefixNode.middle.right);
+            }
         }
-        if (prefixNode.left.character != null) {
-            // System.out.println(2);
-            letterChecker.add(prefixNode.left);
-            // System.out.println(prefixNode.left.character);
-            // System.out.println(prefixNode.left.maxWeight);
-        }
-        if (prefixNode.right.character != null) {
-            // System.out.println(3);
-            letterChecker.add(prefixNode.right);
-            // System.out.println(prefixNode.right.character);
-            // System.out.println(prefixNode.right.maxWeight);
-        }
-        
+
         middle = middle.concat(prefixNode.character.toString());
-        // System.out.println(middle);
         if (prefixNode.exists) {
-            wordAdd.add(prefix.concat(middle));
+            // System.out.println("----");
+            String r = prefix.concat(middle);
+            wordAdd.add(r);
+            // System.out.println(r);
             if (wordWeight.containsKey(prefix.concat(middle))) {
+                // System.out.println("GKGKGKGK");
                 if (wordWeight.get(prefix.concat(middle)) > wordWeight.get(wordAdd.peek())) {
+                    // System.out.println("ERTTEERR");
                     wordAdd.remove(wordAdd.peek());
                 }
             }
+            // System.out.println("ZXCXZZXCX");
             if (wordAdd.size() == k) {
+                // System.out.println("VBVBDVFN");
                 return wordAdd;
             }
-
-
-            // System.out.println("XXXXXXXXX");
-            // TSTNode min = prefixNode;
-            // boolean ran = false;
-            // for (TSTNode last : lastNode) {
-            //     ran = true;
-            //     System.out.println("QQQQQQQQ");
-            //     if (min.weight > last.weight) {
-            //         System.out.println("WWWWWWWW");
-            //         min = last;
-            //     }
-            // }
-            // System.out.println("EEEEEEEE");
-
-            // if (min != prefixNode) {
-            //     lastNode.remove(min);
-            // }
-            // lastNode.add(prefixNode);
-            // matches.add(prefix.concat(middle));
-            // if (matches.size() == k) {
-            //     System.out.println("TTTTTTTT");
-            //     return matches;
-            // }
-
-
-
-
-            // if (min != prefixNode) {
-            //     System.out.println("RRRRRRRR");
-            //     lastNode.remove(min);
-            //     lastNode.add(prefixNode);
-            //     matches.add(prefix.concat(middle));
-            //     if (matches.size() == k) {
-            //         System.out.println("TTTTTTTT");
-            //         return matches;
-            //     }
-            // } else if (!ran) {
-            //     System.out.println("UUUUUUUU");
-            //     lastNode.add(prefixNode);
-            //     String x = prefix.concat(middle);
-            //     System.out.println(x);
-            //     matches.add(x);
-            //     System.out.println("AAAAAAAAAAAAAA");
-            //     if (matches.size() == k) {
-            //         System.out.println("YYYYYYYY");
-            //         for (String s : matches) {
-            //             System.out.println(s);
-            //         }
-            //         return matches;
-            //     }
-            // }
         }
-
-
         while (letterChecker.size() > 0) {
             TSTNode part = letterChecker.poll();
-            System.out.println("low");
-            System.out.println(part.character);
-            System.out.println(letterChecker.size());
+            // System.out.println("low");
+            // System.out.println(part.character);
+            // System.out.println(letterChecker.size());
+            // System.out.println(middle);
             prefixMatch(part, prefix, middle, k, wordAdd, wordWeight);
         }
-        System.out.println("hi");
-        System.out.println(wordAdd.size());
+        // System.out.println("hi");
+        // System.out.println(wordAdd.size());
         return wordAdd;
     }
-
-    // /**
-    //   * Adds left, middle, and right characters in order to the PriorityQueue.
-    //   * @param prefixNode : Keeps track of the root node (for recursive calls).
-    //   * @param letterChecker : the priority queue to be added to.
-    //   */
-    // protected void findMax(TSTNode prefixNode, PriorityQueue<TSTNode> letterChecker) {
-    //     double middle = root.middle.maxWeight;
-    //     double left = root.left.maxWeight;
-    //     double right = root.right.maxWeight;
-    //     if ((middle > left) && (middle > right)) {
-    //         letterChecker.add(root.middle);
-    //         if (left > right) {
-    //             letterChecker.add(root.left);
-    //         } else {
-    //             letterChecker.add(root.right);
-    //         }
-    //     }
-    //     if ((left > middle) && (left > right)) {
-    //         letterChecker.add(root.left);
-    //         if (right > middle) {
-    //             letterChecker.add(root.right);
-    //         } else {
-    //             letterChecker.add(root.middle);
-    //         }
-    //     }
-    //     if ((right > left) && (right > middle)) {
-    //         letterChecker.add(root.right);
-    //         if (middle > left) {
-    //             letterChecker.add(root.middle);
-    //         } else {
-    //             letterChecker.add(root.left);
-    //         }
-    //     }
-    // }
 
     /** 
       * Finds the node where the prefix ends.

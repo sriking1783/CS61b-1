@@ -77,15 +77,15 @@ public class Autocomplete {
             @Override
             public int compare(String x1, String x2) {
                 if (wordWeight.get(x1) < wordWeight.get(x2)) {
-                    return -1;
+                    return 1;
                 } else if (wordWeight.get(x1) == wordWeight.get(x2)) {
                     return 0;
                 }
-                return 1;
+                return -1;
             }
         });
         return tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
-            prefix, "", k, wordAdd, wordWeight);
+            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
     }
 
     /**
