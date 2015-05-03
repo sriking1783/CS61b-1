@@ -1,5 +1,8 @@
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Comparator;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -77,6 +80,21 @@ public class Autocomplete {
             @Override
             public int compare(String x1, String x2) {
                 if (wordWeight.get(x1) < wordWeight.get(x2)) {
+                    return -1;
+                } else if (wordWeight.get(x1) == wordWeight.get(x2)) {
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        PriorityQueue<String> returned = tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
+            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
+        // Iterator<String> y = returned.iterator();
+        // ArrayList<String> returning = new ArrayList<String>();
+        TreeSet<String> returning = new TreeSet<String>(new Comparator<String>() {
+            @Override
+            public int compare(String x1, String x2) {
+                if (wordWeight.get(x1) < wordWeight.get(x2)) {
                     return 1;
                 } else if (wordWeight.get(x1) == wordWeight.get(x2)) {
                     return 0;
@@ -84,8 +102,14 @@ public class Autocomplete {
                 return -1;
             }
         });
-        return tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
-            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
+        // while (y.hasNext()) {
+        //     String a = y.next();
+        //     System.out.println(a);
+        //     returning.add(a);
+        // }
+        returning.addAll(returned);
+        // Collections.reverse(returning);
+        return returning;
     }
 
     /**
