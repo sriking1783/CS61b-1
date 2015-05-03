@@ -85,7 +85,7 @@ public class Autocomplete {
             }
         });
         return tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
-            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
+            prefix, "", k, wordAdd, wordWeight);
     }
 
     /**

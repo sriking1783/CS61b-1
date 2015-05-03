@@ -17,18 +17,9 @@ public class TSTNode {
 
     /** Basic constructor for the TSTNode class. */
     public TSTNode() {
-        // left = new TSTNode();
-        // middle = new TSTNode();
-        // right = new TSTNode();
         exists = false;
         weight = 0;
         maxWeight = 0;
         character = null;
-    }
-
-    /** Constructor that takes in a character */
-    public TSTNode(Character charct) {
-        this();
-        character = charct;
     }
 }
