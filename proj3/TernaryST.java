@@ -17,9 +17,6 @@ public class TernaryST {
     /** Basic constructor for TernaryST */
     public TernaryST() {
         root = new TSTNode();
-        // root.left = new TSTNode();
-        // root.middle = new TSTNode();
-        // root.right = new TSTNode();
     }
 
     /**
@@ -29,87 +26,122 @@ public class TernaryST {
       * @param count : keeps track of the index in the word.
       * @return Iterable : returns the node of the last character of the prefix.
       */
-    protected Iterable<String> prefixMatch(TSTNode prefixNode, String prefix,
-                                        ArrayList<String> matches, String middle,
-                                        ArrayList<TSTNode> lastNode, int k) {
+    protected Iterable<String> prefixMatch(TSTNode prefixNode, String prefix, String middle,
+                                        int k, PriorityQueue<String> wordAdd,
+                                        TreeMap<String, Double> wordWeight) {
         PriorityQueue<TSTNode> letterChecker
                 = new PriorityQueue<TSTNode>(1, new Comparator<TSTNode>() {
             @Override
             public int compare(TSTNode x1, TSTNode x2) {
-                return (int) x2.maxWeight - (int) x1.maxWeight;
+                if (x1.maxWeight < x2.maxWeight) {
+                    return 1;
+                } else if (x1.maxWeight == x2.maxWeight) {
+                    return 0;
+                }
+                return -1;
             }
         });
-                System.out.println("aaaaaaaa");
-                System.out.println(prefix);
-                System.out.println(prefixNode.character);
-                System.out.println("bbbbbbbb");
-        if (prefixNode.middle != null) {
+        System.out.println("aaaaaaaa");
+        System.out.println(prefix);
+        System.out.println(prefixNode.character);
+        System.out.println();
+
+        if (prefixNode.middle.character != null) {
             System.out.println(1);
             letterChecker.add(prefixNode.middle);
+            System.out.println(prefixNode.middle.character);
+            System.out.println(prefixNode.middle.maxWeight);
         }
-        if (prefixNode.left != null) {
+        if (prefixNode.left.character != null) {
             System.out.println(2);
             letterChecker.add(prefixNode.left);
+            System.out.println(prefixNode.left.character);
+            System.out.println(prefixNode.left.maxWeight);
         }
-        if (prefixNode.right != null) {
+        if (prefixNode.right.character != null) {
             System.out.println(3);
             letterChecker.add(prefixNode.right);
+            System.out.println(prefixNode.right.character);
+            System.out.println(prefixNode.right.maxWeight);
         }
         
         middle = middle.concat(prefixNode.character.toString());
         System.out.println(middle);
         if (prefixNode.exists) {
-            System.out.println("XXXXXXXXX");
-            TSTNode min = prefixNode;
-            boolean ran = false;
-            for (TSTNode last : lastNode) {
-                ran = true;
-                System.out.println("QQQQQQQQ");
-                if (min.weight > last.weight) {
-                    System.out.println("WWWWWWWW");
-                    min = last;
+            wordAdd.add(prefix.concat(middle));
+            if (wordWeight.containsKey(prefix.concat(middle))) {
+                if (wordWeight.get(prefix.concat(middle)) > wordWeight.get(wordAdd.peek())) {
+                    wordAdd.remove(wordAdd.peek());
                 }
             }
-            System.out.println("EEEEEEEE");
-            if (min != prefixNode) {
-                System.out.println("RRRRRRRR");
-                lastNode.remove(min);
-                lastNode.add(prefixNode);
-                matches.add(prefix.concat(middle));
-                if (matches.size() == k) {
-                    System.out.println("TTTTTTTT");
-                    return matches;
-                }
-            } else if (!ran) {
-                System.out.println("UUUUUUUU");
-                lastNode.add(prefixNode);
-                matches.add(prefix.concat(middle));
-                if (matches.size() == k) {
-                    System.out.println("YYYYYYYY");
-                    for (String s : matches) {
-                        System.out.println(s);
-                    }
-                    return matches;
-                }
+            if (wordAdd.size() == k) {
+                return wordAdd;
             }
+
+
+            // System.out.println("XXXXXXXXX");
+            // TSTNode min = prefixNode;
+            // boolean ran = false;
+            // for (TSTNode last : lastNode) {
+            //     ran = true;
+            //     System.out.println("QQQQQQQQ");
+            //     if (min.weight > last.weight) {
+            //         System.out.println("WWWWWWWW");
+            //         min = last;
+            //     }
+            // }
+            // System.out.println("EEEEEEEE");
+
+            // if (min != prefixNode) {
+            //     lastNode.remove(min);
+            // }
+            // lastNode.add(prefixNode);
+            // matches.add(prefix.concat(middle));
+            // if (matches.size() == k) {
+            //     System.out.println("TTTTTTTT");
+            //     return matches;
+            // }
+
+
+
+
+            // if (min != prefixNode) {
+            //     System.out.println("RRRRRRRR");
+            //     lastNode.remove(min);
+            //     lastNode.add(prefixNode);
+            //     matches.add(prefix.concat(middle));
+            //     if (matches.size() == k) {
+            //         System.out.println("TTTTTTTT");
+            //         return matches;
+            //     }
+            // } else if (!ran) {
+            //     System.out.println("UUUUUUUU");
+            //     lastNode.add(prefixNode);
+            //     String x = prefix.concat(middle);
+            //     System.out.println(x);
+            //     matches.add(x);
+            //     System.out.println("AAAAAAAAAAAAAA");
+            //     if (matches.size() == k) {
+            //         System.out.println("YYYYYYYY");
+            //         for (String s : matches) {
+            //             System.out.println(s);
+            //         }
+            //         return matches;
+            //     }
+            // }
         }
 
-        Iterator<TSTNode> character = letterChecker.iterator();
-        while (character.hasNext()) {
-            TSTNode part = character.next();
+
+        while (letterChecker.size() > 0) {
+            TSTNode part = letterChecker.poll();
             System.out.println("low");
-            if (part.character == null) {
-                continue;
-            }
-            return prefixMatch(part, prefix, matches, middle, lastNode, k);
+            System.out.println(part.character);
+            System.out.println(letterChecker.size());
+            prefixMatch(part, prefix, middle, k, wordAdd, wordWeight);
         }
         System.out.println("hi");
-        System.out.println();
-        for (String s : matches) {
-            System.out.println(s);
-        }
-        System.out.println();
-        return matches;
+        System.out.println(wordAdd.size());
+        return wordAdd;
     }
 
     // /**
@@ -156,25 +188,17 @@ public class TernaryST {
       */
     protected TSTNode prefixNode(TSTNode root, String prefix, int count) {
         char c = prefix.charAt(count);
-        System.out.println(c);
         if (root == null) {
-            System.out.println("ZZZZZZZZ");
             return root;
         }
-        System.out.println(root.character);
         if (root.character == c) {
-            System.out.println("CCCCCCCC");
             if (count == prefix.length() - 1) {
-                System.out.println("dfdfdfdfdf");
                 return root;
             }
-            System.out.println("VVVVVVVV");
             return prefixNode(root.middle, prefix, count + 1);
         } else if (c < root.character) {
-            System.out.println("BBBBBBBB");
             return prefixNode(root.left, prefix, count);
         } else {
-            System.out.println("NNNNNNNN");
             return prefixNode(root.right, prefix, count);
         }
         // char c = prefix.charAt(count);
@@ -245,15 +269,53 @@ public class TernaryST {
       */
     protected double findWeight(TSTNode root, String word, int count) {
         char c = word.charAt(count);
+        // System.out.println(c);
+        // System.out.println(root.character);
+        // System.out.println(root.middle.character);
+        // System.out.println(root.left.character);
+        // System.out.println(root.right.character);
         if (root.character == c) {
+            // System.out.println("ASDF");
             if (root.exists == true) {
+                // System.out.println(";LKJ");
                 return root.weight;
             }
+            if (root.left.character != null || root.right.character != null) {
+                if (root.middle.character > c) {
+                    // System.out.println("QWER");
+                    return findWeight(root.left, word, count + 1);
+                }
+                if (root.middle.character < c) {
+                    // System.out.println("ZXCV");
+                    return findWeight(root.right, word, count + 1);
+                }
+            }
+            // System.out.println("GHJF");
             return findWeight(root.middle, word, count + 1);
         } else if (c < root.character) {
+            // System.out.println("VBNM");
             return findWeight(root.left, word, count);
         }
+        // System.out.println("RTYU");
         return findWeight(root.right, word, count);
+
+
+        // char c = word.charAt(count);
+        // System.out.println(root.character);
+        // if (root.character == c) {
+        //     System.out.println("ASDF");
+        //     if (root.exists == true) {
+        //         System.out.println(";LKJ");
+        //         return root.weight;
+        //     }
+        //     System.out.println("QWER");
+        //     return findWeight(root.middle, word, count + 1);
+        // } else if (c < root.character) {
+        //     System.out.println("ZXCV");
+        //     return findWeight(root.left, word, count);
+        // }
+        // System.out.println("VBNM");
+        // return findWeight(root.right, word, count);
     }
 
     /**
@@ -284,7 +346,7 @@ public class TernaryST {
         first = false;
         if (root.character == null) {
             root.character = c;
-            boolean first = true;
+            first = true;
         }
         if (root.middle == null) {
             root.middle = new TSTNode();
@@ -301,24 +363,35 @@ public class TernaryST {
             root.weight = wordWeight;
             return root;
         }
+        if (root.maxWeight < wordWeight) {
+            root.maxWeight = wordWeight;
+        }
         if (first == true) {
             return insert(root.middle, word, count + 1, wordWeight);
         }
-        if (root.character == word.charAt(count)) {
-            if (root.middle.maxWeight < wordWeight) {
-                root.middle.maxWeight = wordWeight;
+        if (root.middle.character != null) {
+            if (root.middle.character > word.charAt(count + 1)) {
+                return insert(root.left, word, count + 1, wordWeight);
+            } else if (root.middle.character < word.charAt(count + 1)) {
+                return insert(root.right, word, count + 1, wordWeight);
             }
-            return insert(root.middle, word, count + 1, wordWeight);
-        } else if (root.character > word.charAt(count)) {
-            if (root.right.maxWeight < wordWeight) {
-                root.right.maxWeight = wordWeight;
+        } else {
+            if (root.character == word.charAt(count)) {
+                // if (root.middle.maxWeight < wordWeight) {
+                //     root.middle.maxWeight = wordWeight;
+                // }
+                return insert(root.middle, word, count + 1, wordWeight);
+            } else if (root.character > word.charAt(count)) {
+                // if (root.right.maxWeight < wordWeight) {
+                //     root.right.maxWeight = wordWeight;
+                // }
+                return insert(root.right, word, count, wordWeight);
+            } else if (root.character > word.charAt(count)) {
+                // if (root.left.maxWeight < wordWeight) {
+                //     root.left.maxWeight = wordWeight;
+                // }
+                return insert(root.left, word, count, wordWeight);
             }
-            return insert(root.right, word, count, wordWeight);
-        } else if (root.character > word.charAt(count)) {
-            if (root.left.maxWeight < wordWeight) {
-                root.left.maxWeight = wordWeight;
-            }
-            return insert(root.left, word, count, wordWeight);
         }
         return root;
         // } else {

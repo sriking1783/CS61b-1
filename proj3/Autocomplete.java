@@ -1,3 +1,6 @@
+import java.util.TreeMap;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.LinkedList;
 import java.util.ArrayList;
 /**
@@ -14,6 +17,8 @@ public class Autocomplete {
 
     /** Acts are the core trie structure for this class. */
     public TernaryST tst;
+    /** Keeps track of the weight of added words */
+    protected TreeMap<String, Double> wordWeight;
 
     /**
      * Initializes required data structures from parallel arrays.
@@ -25,12 +30,12 @@ public class Autocomplete {
         if (terms.length != weights.length) {
             throw new IllegalArgumentException();
         }
-        ArrayList<String> completed = new ArrayList<String>();
+        wordWeight = new TreeMap<String, Double>();
         for (int i = 0; i < terms.length; i++) {
-            if (completed.contains(terms[i]) || weights[i] < 0) {
+            if (wordWeight.containsKey(terms[i]) || weights[i] < 0) {
                 throw new IllegalArgumentException();
             }
-            completed.add(terms[i]);
+            wordWeight.put(terms[i], weights[i]);
             tst.insert(terms[i], weights[i]);
         }
     }
@@ -41,7 +46,7 @@ public class Autocomplete {
      * @return double : weight of the term.
      */
     public double weightOf(String term) {
-        double weight = tst.findWeight(term);
+        double weight = wordWeight.get(term);
         if (weight < 0) {
             throw new IllegalArgumentException(); 
         }
@@ -54,9 +59,7 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
-        // TSTNode prefixNode = tst.prefixNode(tst.root, prefix, 0);
-        // tst.prefixMatch(prefixNode, prefix, 0);
-        return "";
+        return topMatches(prefix, 1).iterator().next();
     }
 
     /**
@@ -70,9 +73,19 @@ public class Autocomplete {
         if (k < 0) {
             throw new IllegalArgumentException();
         }
+        PriorityQueue<String> wordAdd = new PriorityQueue<String>(1, new Comparator<String>() {
+            @Override
+            public int compare(String x1, String x2) {
+                if (wordWeight.get(x1) < wordWeight.get(x2)) {
+                    return -1;
+                } else if (wordWeight.get(x1) == wordWeight.get(x2)) {
+                    return 0;
+                }
+                return 1;
+            }
+        });
         return tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
-            prefix.substring(0, prefix.length() - 1), new ArrayList<String>(), "",
-            new ArrayList<TSTNode>(), k);
+            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
     }
 
     /**
