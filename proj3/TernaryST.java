@@ -34,11 +34,11 @@ public class TernaryST {
             @Override
             public int compare(TSTNode x1, TSTNode x2) {
                 if (x1.maxWeight < x2.maxWeight) {
-                    return 1;
+                    return -1;
                 } else if (x1.maxWeight == x2.maxWeight) {
                     return 0;
                 }
-                return -1;
+                return 1;
             }
         });
         // System.out.println("aaaaaaaa");
@@ -68,22 +68,41 @@ public class TernaryST {
         }
 
         middle = middle.concat(prefixNode.character.toString());
-        if (prefixNode.exists) {
+        // System.out.println(middle);
+        // System.out.println(prefixNode.exists);
+        // System.out.println(prefixNode.weight);
+        if (prefixNode.weight != 0) {
             // System.out.println("----");
-            String r = prefix.concat(middle);
-            wordAdd.add(r);
-            // System.out.println(r);
-            if (wordWeight.containsKey(prefix.concat(middle))) {
-                // System.out.println("GKGKGKGK");
-                if (wordWeight.get(prefix.concat(middle)) > wordWeight.get(wordAdd.peek())) {
-                    // System.out.println("ERTTEERR");
-                    wordAdd.remove(wordAdd.peek());
-                }
+            // String r = prefix.concat(middle);
+            String r;
+            if (prefix != "") {
+                r = prefix.concat(middle);
+            } else {
+                r = middle;
             }
-            // System.out.println("ZXCXZZXCX");
-            if (wordAdd.size() == k) {
-                // System.out.println("VBVBDVFN");
-                return wordAdd;
+            // System.out.println(r);
+            // System.out.println("====");
+            wordAdd.add(prefix.concat(middle));
+            // System.out.println(prefix);
+            // System.out.println(middle);
+            if (wordWeight.containsKey(prefix.concat(middle))) {
+                // System.out.println("----");
+                // System.out.println("GKGKGKGK");
+                if (wordAdd.size() > k) {
+                    // System.out.println("wererwr");
+                    // // System.out.println(wordAdd.peek());
+                    // System.out.println(wordWeight.get(prefix.concat(middle)));
+                    // System.out.println(wordWeight.get(wordAdd.peek()));
+                    if (wordWeight.get(prefix.concat(middle)) > wordWeight.get(wordAdd.peek())) {
+                        // System.out.println("ERTTEERR");
+                        // System.out.println(wordAdd.size());
+                        wordAdd.remove(wordAdd.peek());
+                        // // wordAdd.
+                        // System.out.println(wordAdd.size());
+                    } else {
+                        wordAdd.remove(prefix.concat(middle));
+                    }
+                }
             }
         }
         while (letterChecker.size() > 0) {
@@ -93,6 +112,17 @@ public class TernaryST {
             // System.out.println(letterChecker.size());
             // System.out.println(middle);
             prefixMatch(part, prefix, middle, k, wordAdd, wordWeight);
+            // if (wordAdd.size() == k) {
+            //     return wordAdd;
+            // }
+            // if (wordAdd.size() == k) {
+            //         if (wordWeight.get(prefix.concat(middle)) > wordWeight.get(wordAdd.peek())) {
+            //             System.out.println("ERTTEERR");
+            //             wordAdd.remove(wordAdd.peek());
+            //         }
+            //         System.out.println("VBVBDVFN");
+            //         return wordAdd;
+            //     }
         }
         // System.out.println("hi");
         // System.out.println(wordAdd.size());
@@ -185,6 +215,7 @@ public class TernaryST {
             x.character = c;
         }
         if (count == word.length() - 1) {
+            // Account for if the last character is not in the tree
             x.exists = true;
             x.maxWeight = wordWeight;
             x.weight = wordWeight;

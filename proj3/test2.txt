@@ -1,3 +1,5 @@
-2   
+4   
    4249.97	automobile
    6196.95	automatic
+   4249.97	smog
+   6196.95	sad
