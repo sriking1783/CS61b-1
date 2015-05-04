@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 /**
  * Prefix-Trie. Supports linear time find() and insert(). 
  * Should support determining whether a word is a full word in the 
@@ -11,8 +10,11 @@ import java.util.Comparator;
  * @author Aditya Iyengar
  */
 public class SortedTries extends Trie {
-	
-	/** Default constructor for the SortedTries class. */
+  
+  /**
+    * Default constructor for the SortedTries class.
+    * @param alphabet : takes in an alphabet for the comparator object.
+    */
     public SortedTries(ArrayList<Character> alphabet) {
         pointer = new Node(alphabet);
     }
@@ -51,8 +53,7 @@ public class SortedTries extends Trie {
             } else {
                 root.links.get(c).exists = true;
             }
-        }
-        else {
+        } else {
             root.links.put(c, new Node(alphabet));
             if (count == word.length() - 1) {
                 root.links.get(c).exists = true;

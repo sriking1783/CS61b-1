@@ -22,8 +22,11 @@ public class Node {
         exists = false;
     }
 
-    /** Constructor for the Node class that takes in the order of the alphabet.
-      * (allows for easier sorting when inserting objects into the SortedTries) */
+    /**
+      * Constructor for the Node class that takes in the order of the alphabet.
+      * (allows for easier sorting when inserting objects into the SortedTries)
+      * @param alphabetOrder : order of the alphabet for comparator object.
+      */
     public Node(ArrayList<Character> alphabetOrder) {
         alphabet = alphabetOrder;
         links = new TreeMap<Character, Node>(new Comparator<Character>() {

@@ -1,11 +1,8 @@
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Comparator;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
-import java.util.ArrayList;
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  * Throw an IllegalArgumentException whenever:
@@ -20,7 +17,7 @@ import java.util.ArrayList;
 public class Autocomplete {
 
     /** Acts are the core trie structure for this class. */
-    public TernaryST tst;
+    protected TernaryST tst;
     /** Keeps track of the weight of added words */
     protected TreeMap<String, Double> wordWeight;
 
@@ -69,9 +66,9 @@ public class Autocomplete {
     /**
      * Returns the top k matching terms (in descending order of weight) as an iterable.
      * If there are less than k matches, return all the matching terms.
-     * @param prefix
-     * @param k
-     * @return
+     * @param prefix : prefix word.
+     * @param k : count of k matches
+     * @return Iterable : iterable object.
      */
     public Iterable<String> topMatches(String prefix, int k) {
         if (k < 0) {
@@ -90,8 +87,6 @@ public class Autocomplete {
         });
         PriorityQueue<String> returned = tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
             prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
-        // Iterator<String> y = returned.iterator();
-        // ArrayList<String> returning = new ArrayList<String>();
         TreeSet<String> returning = new TreeSet<String>(new Comparator<String>() {
             @Override
             public int compare(String x1, String x2) {
@@ -103,13 +98,7 @@ public class Autocomplete {
                 return -1;
             }
         });
-        // while (y.hasNext()) {
-        //     String a = y.next();
-        //     System.out.println(a);
-        //     returning.add(a);
-        // }
         returning.addAll(returned);
-        // Collections.reverse(returning);
         return returning;
     }
 
@@ -127,8 +116,8 @@ public class Autocomplete {
         return results;
     }
     /**
-     * Test client. Reads the data from the file, 
-     * then repeatedly reads autocomplete queries from standard input and prints out the top k matching terms.
+     * Test client. Reads the data from the file, then repeatedly reads autocomplete queries
+     * from standard input and prints out the top k matching terms.
      * @param args takes the name of an input file and an integer k as command-line arguments
      */
     public static void main(String[] args) {
