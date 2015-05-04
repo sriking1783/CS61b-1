@@ -147,6 +147,9 @@ public class TernaryST {
       * @return Node : returns the node of the last character of the prefix.
       */
     protected TSTNode prefixNode(TSTNode x, String prefix, int count) {
+        if (prefix.equals("") || prefix == null) {
+            return x;
+        }
         char c = prefix.charAt(count);
         if (x == null) {
             return x;

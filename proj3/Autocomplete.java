@@ -1,5 +1,7 @@
+import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
@@ -20,6 +22,8 @@ public class Autocomplete {
     protected TernaryST tst;
     /** Keeps track of the weight of added words */
     protected TreeMap<String, Double> wordWeight;
+    /** Strings ordered by their weights */
+    protected TreeSet<String> orderedStrings;
 
     /**
      * Initializes required data structures from parallel arrays.
@@ -32,12 +36,24 @@ public class Autocomplete {
             throw new IllegalArgumentException();
         }
         wordWeight = new TreeMap<String, Double>();
+        orderedStrings = new TreeSet<String>(new Comparator<String>() {
+            @Override
+            public int compare(String x1, String x2) {
+                if (wordWeight.get(x1) < wordWeight.get(x2)) {
+                    return 1;
+                } else if (wordWeight.get(x1) == wordWeight.get(x2)) {
+                    return 0;
+                }
+                return -1;
+            }
+        });
         for (int i = 0; i < terms.length; i++) {
             if (wordWeight.containsKey(terms[i]) || weights[i] < 0) {
                 throw new IllegalArgumentException();
             }
             wordWeight.put(terms[i], weights[i]);
             tst.insert(terms[i], weights[i]);
+            orderedStrings.add(terms[i]);
         }
     }
 
@@ -85,8 +101,18 @@ public class Autocomplete {
                 return 1;
             }
         });
+        if (prefix.equals("")) {
+            ArrayList<String> kWords = new ArrayList<String>();
+            Iterator<String> firstK = orderedStrings.iterator();
+            int count = 0;
+            while (count < k && firstK.hasNext()) {
+                kWords.add(firstK.next());
+                count += 1;
+            }
+            return kWords;
+        }
         PriorityQueue<String> returned = tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
-            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
+        prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
         TreeSet<String> returning = new TreeSet<String>(new Comparator<String>() {
             @Override
             public int compare(String x1, String x2) {
@@ -138,8 +164,9 @@ public class Autocomplete {
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
             String prefix = StdIn.readLine();
-            for (String term : autocomplete.topMatches(prefix, k))
+            for (String term : autocomplete.topMatches(prefix, k)) {
                 StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);
+            }
         }
     }
 }
