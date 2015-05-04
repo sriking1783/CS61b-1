@@ -112,7 +112,7 @@ public class Autocomplete {
             return kWords;
         }
         PriorityQueue<String> returned = tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
-        prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
+            prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
         TreeSet<String> returning = new TreeSet<String>(new Comparator<String>() {
             @Override
             public int compare(String x1, String x2) {
