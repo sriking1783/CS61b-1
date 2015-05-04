@@ -29,6 +29,9 @@ public class TernaryST {
     protected PriorityQueue<String> prefixMatch(TSTNode prefixNode, String prefix, String middle,
             int k, PriorityQueue<String> wordAdd, TreeMap<String, Double> wordWeight) {
         
+        if (prefixNode == null) {
+            return wordAdd;
+        }
         PriorityQueue<TSTNode> letterChecker
                 = new PriorityQueue<TSTNode>(1, new Comparator<TSTNode>() {
             @Override
@@ -41,101 +44,38 @@ public class TernaryST {
                 return 1;
             }
         });
-        // System.out.println("aaaaaaaa");
-        // System.out.println(prefix);
-        // System.out.println(prefixNode.character);
-        // System.out.println();
-
         if (prefixNode.middle != null) {
-            // System.out.println(1);
-            // if (prefixNode.middle.middle != null) {
-                // System.out.println(2);
-                // System.out.println(prefixNode.character);
-                // System.out.println(prefixNode.middle.character);
-                // System.out.println(prefixNode.middle.middle.character);
-                letterChecker.add(prefixNode.middle);
-            // }
+            letterChecker.add(prefixNode.middle);
             if (prefixNode.middle.left != null) {
-                // System.out.println(3);
-                // System.out.println(prefixNode.middle.left.character);
                 letterChecker.add(prefixNode.middle.left);
             }
             if (prefixNode.middle.right != null) {
-                // System.out.println(4);
-                // System.out.println(prefixNode.middle.right.character);
                 letterChecker.add(prefixNode.middle.right);
             }
         }
-
         middle = middle.concat(prefixNode.character.toString());
-        // System.out.println(middle);
-        // System.out.println(prefixNode.exists);
-        // System.out.println(prefixNode.weight);
         if (prefixNode.weight != 0) {
-            // System.out.println("----");
-            // System.out.println(prefix.concat(middle));
             String r;
             if (prefix != "") {
                 r = prefix.concat(middle);
             } else {
                 r = middle;
             }
-            // System.out.println(r);
-            // System.out.println("====");
-            // if (wordAdd.size() > 0) {
-            //     System.out.println(wordWeight.get(wordAdd.peek()));
-            // }
             wordAdd.add(prefix.concat(middle));
-            // if (wordAdd.size() > 0) {
-            //     System.out.println(wordWeight.get(wordAdd.peek()));
-            // }
-            // System.out.println("====");
-            // System.out.println(prefix);
-            // System.out.println(middle);
             if (wordWeight.containsKey(prefix.concat(middle))) {
-                // System.out.println("----");
-                // System.out.println("GKGKGKGK");
                 if (wordAdd.size() > k) {
-                    // System.out.println("wererwr");
-                    // // System.out.println(wordAdd.peek());
-                    // System.out.println(wordWeight.get(prefix.concat(middle)));
-                    // System.out.println(wordWeight.get(wordAdd.peek()));
                     if (wordWeight.get(r) > wordWeight.get(wordAdd.peek())) {
-                        // System.out.println("ERTTEERR");
-                        // System.out.println(wordAdd.size());
                         wordAdd.remove(wordAdd.peek());
-                        // // wordAdd.
-                        // System.out.println(wordAdd.size());
                     } else {
                         wordAdd.remove(prefix.concat(middle));
-                        // System.out.println("!!!!!!!!");
-                        // System.out.println(prefix.concat(middle));
-                        // System.out.println("!!!!!!!!");
                     }
                 }
             }
         }
         while (letterChecker.size() > 0) {
             TSTNode part = letterChecker.poll();
-            // System.out.println("low");
-            // System.out.println(part.character);
-            // System.out.println(letterChecker.size());
-            // System.out.println(middle);
             prefixMatch(part, prefix, middle, k, wordAdd, wordWeight);
-            // if (wordAdd.size() == k) {
-            //     return wordAdd;
-            // }
-            // if (wordAdd.size() == k) {
-            //         if (wordWeight.get(prefix.concat(middle)) > wordWeight.get(wordAdd.peek())) {
-            //             System.out.println("ERTTEERR");
-            //             wordAdd.remove(wordAdd.peek());
-            //         }
-            //         System.out.println("VBVBDVFN");
-            //         return wordAdd;
-            //     }
         }
-        // System.out.println("hi");
-        // System.out.println(wordAdd.size());
         return wordAdd;
     }
 
