@@ -12,7 +12,10 @@ import java.util.ArrayList;
  */
 public class AlphabetSort {
 
-    /** Does the core work of the AlphabetSort class. */
+    /**
+      * Does the core work of the AlphabetSort class.
+      * @param args : input of the main method.
+      */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         if (!input.hasNext()) {

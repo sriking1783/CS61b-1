@@ -1,3 +1,10 @@
+/** 
+  * Represents each node within the TernaryST. (Implementation taken from lecture slides).
+  * Note: Using a TreeMap implementation because it was recommended to save memory, even
+  * though it may be slightly less efficient.
+  * 
+  * @author Aditya Iyengar
+  */
 public class TSTNode {
     /** Holds the maximum weight of the subtrees. */
     public double maxWeight;
