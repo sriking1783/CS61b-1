@@ -3,6 +3,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.LinkedList;
 /**
@@ -22,8 +23,8 @@ public class Autocomplete {
     protected TernaryST tst;
     /** Keeps track of the weight of added words */
     protected TreeMap<String, Double> wordWeight;
-    /** Strings ordered by their weights */
-    protected TreeSet<String> orderedStrings;
+    /** Holds the strings in order of weights */
+    protected TreeMap<Double, String> ranks;
 
     /**
      * Initializes required data structures from parallel arrays.
@@ -36,24 +37,14 @@ public class Autocomplete {
             throw new IllegalArgumentException();
         }
         wordWeight = new TreeMap<String, Double>();
-        orderedStrings = new TreeSet<String>(new Comparator<String>() {
-            @Override
-            public int compare(String x1, String x2) {
-                if (wordWeight.get(x1) < wordWeight.get(x2)) {
-                    return 1;
-                } else if (wordWeight.get(x1) == wordWeight.get(x2)) {
-                    return 0;
-                }
-                return -1;
-            }
-        });
+        ranks = new TreeMap<Double, String>(Collections.reverseOrder());
         for (int i = 0; i < terms.length; i++) {
             if (wordWeight.containsKey(terms[i]) || weights[i] < 0) {
                 throw new IllegalArgumentException();
             }
             wordWeight.put(terms[i], weights[i]);
+            ranks.put(weights[i], terms[i]);
             tst.insert(terms[i], weights[i]);
-            orderedStrings.add(terms[i]);
         }
     }
 
@@ -103,15 +94,18 @@ public class Autocomplete {
         });
         if (prefix.equals("")) {
             ArrayList<String> kWords = new ArrayList<String>();
-            Iterator<String> firstK = orderedStrings.iterator();
             int count = 0;
-            while (count < k && firstK.hasNext()) {
-                kWords.add(firstK.next());
+            for (Double i : ranks.keySet()) {
+                if (count == k) {
+                    break;
+                }
+                kWords.add(ranks.get(i));
                 count += 1;
             }
             return kWords;
         }
-        PriorityQueue<String> returned = tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
+        PriorityQueue<String> returned;
+        returned = tst.prefixMatch(tst.prefixNode(tst.root, prefix, 0),
             prefix.substring(0, prefix.length() - 1), "", k, wordAdd, wordWeight);
         TreeSet<String> returning = new TreeSet<String>(new Comparator<String>() {
             @Override
